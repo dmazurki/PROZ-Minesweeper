@@ -7,31 +7,26 @@ public class Field {
 		COVERED, REVEALED;
 	}
 	
-	private State state; 
-	private boolean isMine;
+	private State state_; 
+	private boolean isMine_;
 
 	
 	public Field()
 	{
-		state = State.COVERED;
-		isMine = false;
+		state_ = State.COVERED;
+		isMine_ = false;
 		
 	}
 	
-	public void reveal()
-	{
-		state = State.REVEALED;
-	}
+	public void reveal(){state_ = State.REVEALED;}
 	
-	public State getState()
-	{
-		return state;
-	}
+	public State getState(){return state_;}
 	
-	public boolean isMine()
-	{
-		return isMine;
-	}
+	public boolean isMine(){return isMine_;}
+	
+	void putMine(){isMine_ = true;}
+	
+	void disarm(){isMine_ = false;}
 	
 
 }
