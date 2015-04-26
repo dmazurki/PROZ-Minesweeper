@@ -1,32 +1,20 @@
 package Model;
 
-public class Field {
-	
-	public enum State
-	{
-		COVERED, REVEALED;
-	}
-	
-	private State state_; 
+/**
+ * This class represents field on the game board. It allows diffrent operations and initialisation of field.
+ * @author Damian
+ *
+ */
+
+public class Field
+{
 	private boolean isMine_;
-
+	private boolean isRevealed_;
 	
-	public Field()
-	{
-		state_ = State.COVERED;
-		isMine_ = false;
-		
-	}
-	
-	public void reveal(){state_ = State.REVEALED;}
-	
-	public State getState(){return state_;}
-	
+	public Field(){isRevealed_=isMine_=false;}
+	public void reveal(){isRevealed_ = true;}
+	public boolean isRevealed(){return isRevealed_;}
 	public boolean isMine(){return isMine_;}
-	
 	void putMine(){isMine_ = true;}
-	
 	void disarm(){isMine_ = false;}
-	
-
 }

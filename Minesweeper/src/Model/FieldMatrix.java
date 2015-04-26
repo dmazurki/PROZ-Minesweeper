@@ -14,6 +14,13 @@ public class FieldMatrix {
 	int width_, height_;
 	Random generator_;
 	
+	
+	/**
+	 * Constructor that creates Field matrix and fills it with fields, initially
+	 * all fields are covered and not mines.
+	 * @param width - width of field matrix (how many fields horizontally)
+	 * @param height - height of field matrix (how many fields vertically)
+	 */
 	public FieldMatrix(int width,int height)
 	{
 		width_ = width;
@@ -22,16 +29,28 @@ public class FieldMatrix {
 		fields_ = new ArrayList<Field>();
 		
 		for (int i = 0; i<width_*height_; ++i)
-		{
 			fields_.add(new Field());
-		}
 	}
 	
-	public Field getField(int x, int y)
+	/**
+	 * Function that allows accessing fields in the matrix.
+	 * @param x - number of column
+	 * @param y - number of row
+	 * @return Field at given coordinates.
+	 */
+	public Field getField(int x, int y) throws IllegalArgumentException
 	{
-		return fields_.get(x+y*width_);
+		if(correctCoordinates(x,y))
+			return fields_.get(x+y*width_);
+		else throw new IllegalArgumentException("Given coordinates x="+x+" y="+y+" are not legal for this FieldMatrix.");
 	}
 	
+	/**
+	 * Checks if field with coordinates x, y exists on the field matrix.
+	 * @param x 
+	 * @param y
+	 * @return true - if coordinates are correct, false - otherwise.
+	 */
 	public boolean correctCoordinates(int x, int y)
 	{
 		if(x>=0 && y>=0 && x<width_ && y<height_)
@@ -69,11 +88,11 @@ public class FieldMatrix {
 		double mineProbability;
 		int minesCount = 0;
 	
-		System.out.println("MINES!");
+		
 		for(Field i : fields_)
 		{
 			i.disarm();
-			if(i.getState() == Field.State.COVERED)
+			if(!i.isRevealed())
 				++coveredPlacesCount;
 		}
 		
@@ -81,7 +100,7 @@ public class FieldMatrix {
 		
 		for(Field i : fields_)
 		{
-			if(i.getState() == Field.State.COVERED)
+			if(!i.isRevealed())
 			{
 				if(generator_.nextDouble()<=mineProbability)
 				{
@@ -99,7 +118,7 @@ public class FieldMatrix {
 			if(minesCount<minesQuantity)
 			{
 				
-				if(field.isMine() == false && field.getState() == Field.State.COVERED)
+				if(field.isMine() == false && !field.isRevealed())
 				{
 					field.putMine();
 					++minesCount;
@@ -107,7 +126,7 @@ public class FieldMatrix {
 			}
 			else
 			{
-				if(field.isMine() == true && field.getState() == Field.State.COVERED)
+				if(field.isMine() == true && !field.isRevealed())
 				{
 					field.disarm();
 					--minesCount;
@@ -124,7 +143,7 @@ public class FieldMatrix {
 			for(int j = 0; j<width_;++j)
 			{
 				Field temp = getField(j,i);
-				if(temp.getState() == Field.State.COVERED)
+				if(!temp.isRevealed())
 					System.out.print("X ");
 				else if(temp.isMine() == true)
 					System.out.print("M ");

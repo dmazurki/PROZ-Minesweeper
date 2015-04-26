@@ -42,7 +42,7 @@ public class Board {
 			return;
 		
 		Field field = fields_.getField(x, y);
-		if(field.getState()==Field.State.COVERED)
+		if(!field.isRevealed())
 		{
 			field.reveal();
 			
