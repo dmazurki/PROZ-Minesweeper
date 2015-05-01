@@ -8,22 +8,24 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import Model.ModelDataPack;
+
 public class SaperMainFrame extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	private SaperBoardPanel saperBoard_;
 	
-	public SaperMainFrame()
+	public SaperMainFrame(ModelDataPack dataPack)
 	{
-		super.setTitle("Saper.");
-		super.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		super.setLocationRelativeTo(null);
-		//super.setLayout();
-		super.setSize(300, 300);
+		setTitle("Saper.");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+		saperBoard_ = new SaperBoardPanel(dataPack.fields_);
+		add(saperBoard_);
+		setSize(480, 480);
 		createMenuBar();
-		super.setVisible(true);
+		setVisible(true);
+		setResizable(false);
 	}
 	
 	/**

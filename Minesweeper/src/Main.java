@@ -1,5 +1,6 @@
 import javax.swing.SwingUtilities;
 
+import Model.Model;
 import View.View;
 
 
@@ -12,7 +13,9 @@ public class Main {
 				@Override
 				public void run()
 				{
-					View view = new View();
+					Model model = new Model();
+					View view = new View(model.getDataPack());
+					
 					
 				}
 			});

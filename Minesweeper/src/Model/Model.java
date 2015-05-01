@@ -1,46 +1,33 @@
 package Model;
 
-import java.util.Scanner;
+
 
 public class Model{
-	Board board_;
+	private Board board_;
+	private GameState state_;
+	private int time_;
 	
 	public Model()
 	{
-		
+		board_ = new Board(10,10,10);
+		state_ = GameState.BEGINNING;
+		time_ = 0;
 	}
 	
-	void startGame()
+	public void updateModel()
 	{
 		
 	}
 	
-	void setSettings()
+	public ModelDataPack getDataPack()
 	{
-		
+		ModelDataPack dataPack = new ModelDataPack(); 
+		dataPack.time_ = time_;
+		dataPack.gameState_ = state_;
+		dataPack.fields_ = board_.getFields();
+		return dataPack;
 	}
 	
-	public static void main(String [] args)
-	{
-		Board board = new Board(20,20,20);
-		Scanner input = new Scanner(System.in);
-		boolean quit = false;
-		while(quit != true)
-		{
-			board.drawInConsole();
-			int x = Integer.parseInt(input.next());
-			int y = Integer.parseInt(input.next());
-			board.revealField(x-1, y-1);
-			
-			if(board.endGame())
-			{	board.revealAll();
-				board.drawInConsole();
-				quit = true;
-			}
-			
-		}
-		input.close();
-		
-	}
+
 
 }

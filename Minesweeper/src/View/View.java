@@ -1,10 +1,18 @@
 package View;
 
+import Model.ModelDataPack;
+
 public class View {
 	private SaperMainFrame mainFrame_;
 	
-	public View()
+	public View(ModelDataPack dataPack)
 	{
-		mainFrame_ = new SaperMainFrame();
+		Assets.load();
+		mainFrame_ = new SaperMainFrame(dataPack);
+	}
+	
+	void update(ModelDataPack dataPack)
+	{
+		
 	}
 }
