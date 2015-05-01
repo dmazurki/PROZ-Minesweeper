@@ -1,5 +1,7 @@
 package View;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -7,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
 
 import Model.ModelDataPack;
 
@@ -14,20 +18,31 @@ public class SaperMainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private SaperBoardPanel saperBoard_;
+	private SaperInfoPanel saperInfo_;
 	
 	public SaperMainFrame(ModelDataPack dataPack)
 	{
-		setTitle("Saper.");
+		setTitle("Minesweeper.");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-		saperBoard_ = new SaperBoardPanel(dataPack.fields_);
-		add(saperBoard_);
-		setSize(480, 480);
+		
 		createMenuBar();
+		saperBoard_ = new SaperBoardPanel(dataPack.getFields());
+
+		add(saperBoard_,BorderLayout.CENTER);
 		setVisible(true);
+		//setSize(View.BLOCK_SIZE*10, View.BLOCK_SIZE*16);
+		
+		
+		
+		
+		
 		setResizable(false);
 	}
-	
+	void update(ModelDataPack dataPack)
+	{
+		saperBoard_.update(dataPack.getFields());
+	}
 	/**
 	 * Method that is responsible for building a menu bar and configuring it.
 	 */

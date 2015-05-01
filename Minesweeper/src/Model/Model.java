@@ -21,11 +21,7 @@ public class Model{
 	
 	public ModelDataPack getDataPack()
 	{
-		ModelDataPack dataPack = new ModelDataPack(); 
-		dataPack.time_ = time_;
-		dataPack.gameState_ = state_;
-		dataPack.fields_ = board_.getFields();
-		return dataPack;
+		return  new ModelDataPack(time_,board_.getFields(),state_); 
 	}
 	
 
