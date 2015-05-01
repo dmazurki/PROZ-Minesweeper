@@ -18,7 +18,7 @@ public class SaperMainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private SaperBoardPanel saperBoard_;
-	private SaperInfoPanel saperInfo_;
+	
 	
 	public SaperMainFrame(ModelDataPack dataPack)
 	{
@@ -26,12 +26,14 @@ public class SaperMainFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
-		createMenuBar();
 		saperBoard_ = new SaperBoardPanel(dataPack.getFields());
-
+		
+		createMenuBar();
+		
 		add(saperBoard_,BorderLayout.CENTER);
+		//setSize(View.BLOCK_SIZE*dataPack.getFields().length, View.BLOCK_SIZE*14);
 		setVisible(true);
-		//setSize(View.BLOCK_SIZE*10, View.BLOCK_SIZE*16);
+		
 		
 		
 		
@@ -42,6 +44,7 @@ public class SaperMainFrame extends JFrame {
 	void update(ModelDataPack dataPack)
 	{
 		saperBoard_.update(dataPack.getFields());
+		setSize(View.BLOCK_SIZE*(dataPack.getFields()[0].length+1), View.BLOCK_SIZE*(dataPack.getFields().length+4));
 	}
 	/**
 	 * Method that is responsible for building a menu bar and configuring it.

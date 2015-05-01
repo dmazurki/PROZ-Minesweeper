@@ -5,16 +5,14 @@ import java.awt.Color;
 import Model.FieldOutlook;
 
 
-
-
-import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 
 
 
-import javax.swing.JFrame;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class SaperBoardPanel extends JPanel {
@@ -26,6 +24,8 @@ public class SaperBoardPanel extends JPanel {
 	public SaperBoardPanel(FieldOutlook[][] fields)
 	{
 		fields_ = fields;
+		add(new JLabel("State:"));
+		add(new JLabel("Time:"));
 		
 		
 	}
@@ -43,7 +43,8 @@ public class SaperBoardPanel extends JPanel {
         {
         	for(int j = 0; j<fields_[i].length; ++j)
         	{
-        		 g2d.drawImage(Assets.getImage(fields_[i][j]),View.BLOCK_SIZE*i,View.BLOCK_SIZE*(j+2),null);
+   
+        		 g2d.drawImage(Assets.getImage(fields_[i][j]),(getParent().getWidth()-View.BLOCK_SIZE*fields_[0].length)/2 + View.BLOCK_SIZE*j,View.BLOCK_SIZE*(i+1)+View.BLOCK_SIZE/2,null);
         	}
         }
        

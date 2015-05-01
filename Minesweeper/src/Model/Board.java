@@ -42,9 +42,10 @@ public class Board {
 		for(int i = 0; i< fields_.getHeight(); ++i)
 		{
 			fields[i] = new FieldOutlook[fields_.getWidth()];
+		
 			for(int j = 0; j<fields_.getWidth(); ++j)
 			{
-				Field field = fields_.getField(j, i);
+				Field field = fields_.getField(j,i);
 				fields[i][j] = field.getOutlook();
 			}
 		}

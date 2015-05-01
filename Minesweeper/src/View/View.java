@@ -5,7 +5,7 @@ import Model.ModelDataPack;
 
 public class View {
 	
-	final static int BLOCK_SIZE = 16;
+	final static int BLOCK_SIZE = 24;
 	
 	Controller controller_;
 	private SaperMainFrame mainFrame_;

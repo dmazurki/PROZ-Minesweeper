@@ -4,6 +4,7 @@ public class ModelDataPack {
 	private int time_;
 	private FieldOutlook[][] fields_;
 	private GameState gameState_;
+	private int width_;
 	
 	public ModelDataPack(int time, FieldOutlook[][] fields,GameState gameState)
 	{
