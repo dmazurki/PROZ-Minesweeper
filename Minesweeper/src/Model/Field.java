@@ -3,9 +3,7 @@ package Model;
 /**
  * This class represents field on the game board. It allows diffrent operations and initialisation of field.
  * @author Damian
- *
  */
-
 public class Field
 {
 	private boolean isMine_;

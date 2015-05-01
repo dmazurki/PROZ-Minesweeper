@@ -32,6 +32,9 @@ public class FieldMatrix {
 			fields_.add(new Field());
 	}
 	
+	int getWidth() {return width_;}
+	int getHeight(){return height_;}
+	
 	/**
 	 * Function that allows accessing fields in the matrix.
 	 * @param x - number of column
@@ -57,11 +60,18 @@ public class FieldMatrix {
 			return true;
 		return false;
 	}
-	
-	public int adjacentMines(int x, int y)
+	/**
+	 * This method returns the amount of fields adjacent to field at given coordinates, which contain a mine.
+	 * @param x
+	 * @param y
+	 * @return Number of adjacent fields with mines. 
+	 */
+	public int adjacentMines(int x, int y) throws IllegalArgumentException
 	{
-		int adjacent = 0;
+		if(!correctCoordinates(x,y))
+			throw new IllegalArgumentException("Given coordinates x="+x+" y="+y+" are not legal for this FieldMatrix.");
 		
+		int adjacent = 0;
 		if(x>0 && y>0 && getField(x-1,y-1).isMine())
 			++adjacent;
 		if(y>0 && getField(x,y-1).isMine())
@@ -82,13 +92,16 @@ public class FieldMatrix {
 		return adjacent;
 	}
 	
+	/**
+	 * This method randomly puts given number of mines in covered fields.
+	 * @param minesQuantity
+	 */
 	void throwMines(double minesQuantity)
 	{
 		double coveredPlacesCount  = 0;
 		double mineProbability;
 		int minesCount = 0;
 	
-		
 		for(Field i : fields_)
 		{
 			i.disarm();
@@ -100,14 +113,11 @@ public class FieldMatrix {
 		
 		for(Field i : fields_)
 		{
-			if(!i.isRevealed())
-			{
-				if(generator_.nextDouble()<=mineProbability)
+				if(!i.isRevealed() && generator_.nextDouble()<=mineProbability)
 				{
 					i.putMine();
 					++minesCount;
 				}
-			}
 		}
 		
 		while(minesCount!=minesQuantity)
@@ -154,7 +164,6 @@ public class FieldMatrix {
 		}
 	}
 	
-	int getWidth() {return width_;}
-	int getHeight(){return height_;}
+	
 
 }

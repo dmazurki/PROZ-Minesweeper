@@ -15,7 +15,12 @@ public class Board {
 	
 	FieldMatrix fields_;
 	
-	
+	/**
+	 * 
+	 * @param width - how many fields horizontally
+	 * @param height - how many fields vertically
+	 * @param mines - how many fields should be on the board
+	 */
 	public Board(int width, int height, int mines)
 	{
 		fields_ = new FieldMatrix(width,height);

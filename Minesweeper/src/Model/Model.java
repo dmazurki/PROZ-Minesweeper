@@ -3,11 +3,26 @@ package Model;
 import java.util.Scanner;
 
 public class Model{
+	Board board_;
 	
+	public Model()
+	{
+		
+	}
+	
+	void startGame()
+	{
+		
+	}
+	
+	void setSettings()
+	{
+		
+	}
 	
 	public static void main(String [] args)
 	{
-		Board board = new Board(10,10,10);
+		Board board = new Board(20,20,20);
 		Scanner input = new Scanner(System.in);
 		boolean quit = false;
 		while(quit != true)
