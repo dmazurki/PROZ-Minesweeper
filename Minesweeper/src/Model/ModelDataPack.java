@@ -11,7 +11,9 @@ public class ModelDataPack {
 		time_=time; fields_=fields; gameState_ = gameState;
 	}
 	
-	public static ModelDataPack getNullDataPack() {return new ModelDataPack(0,new FieldOutlook[0][],GameState.BEGINNING);}
+	public static ModelDataPack getNullDataPack() {
+		return new ModelDataPack(0,new FieldOutlook[0][],GameState.BEGINNING);
+		}
 	
 	public FieldOutlook[][] getFields() {return fields_;}
 }

@@ -44,7 +44,7 @@ public class SaperBoardPanel extends JPanel {
         	for(int j = 0; j<fields_[i].length; ++j)
         	{
    
-        		 g2d.drawImage(Assets.getImage(fields_[i][j]),(getParent().getWidth()-View.BLOCK_SIZE*fields_[0].length)/2 + View.BLOCK_SIZE*j,View.BLOCK_SIZE*(i+1)+View.BLOCK_SIZE/2,null);
+        		 g2d.drawImage(Assets.getImage(fields_[i][j]),getBoardX()+ View.BLOCK_SIZE*j,getBoardY()+View.BLOCK_SIZE*i,null);
         	}
         }
        
@@ -53,6 +53,16 @@ public class SaperBoardPanel extends JPanel {
 	void update(FieldOutlook[][] fields)
 	{
 		fields_ = fields;
-		repaint();
+		repaint(); getParent();
 	}
-   }
+   
+
+	public int getBoardX()
+	{
+		return (getParent().getWidth()-View.BLOCK_SIZE*fields_[0].length)/2;
+	}
+	public  int getBoardY()
+	{
+		return (View.BLOCK_SIZE*3)/2;
+	}
+}

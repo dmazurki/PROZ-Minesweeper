@@ -1,0 +1,15 @@
+<settings>
+	<mode>BEGINNER</mode>
+	<rows>10</rows>
+	<columns>10</columns>
+	<mines>10</mines>
+	<highScores>
+		<place1>
+			<playerName>Damian</playerName>
+			<mode>EXPERT</mode>
+			<time>100</time>
+		</place1>
+	</highScores>
+	<xWindowPos>0</xWindowPos>
+	<yWindowPos>0</yWindowPos>
+</settings>

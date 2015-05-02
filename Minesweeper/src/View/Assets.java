@@ -12,7 +12,7 @@ public class Assets {
 	public static void load()
 	{
 		images_ = new Image[12];
-		images_[0] = new ImageIcon("Assets/t.png").getImage();
+		images_[0] = new ImageIcon("Assets/covered.png").getImage();
 		images_[1] = new ImageIcon("Assets/mine.png").getImage();
 		images_[2] = new ImageIcon("Assets/flagged.png").getImage();
 		images_[3] = new ImageIcon("Assets/zeroAdjacent.png").getImage();

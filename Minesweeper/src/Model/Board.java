@@ -69,16 +69,34 @@ public class Board {
 		{
 			field.reveal();
 			
-			if(field.isMine())
-				endGame_ = true;
-			
 			if (beginning_ == true)
 			{
 				fields_.throwMines(mines_);
 				beginning_ = false;
 			}
 			
+			if(field.isMine())
+			{
+				endGame_ = true;
+				field.setOutlook(FieldOutlook.MINE);
+			}
+			
 			int adjacent = fields_.adjacentMines(x, y);
+			if(!field.isMine())
+			{
+			switch(adjacent)
+			{
+			case 0: field.setOutlook(FieldOutlook.ZERO_ADJACENT); break;
+			case 1: field.setOutlook(FieldOutlook.ONE_ADJACENT); break;
+			case 2: field.setOutlook(FieldOutlook.TWO_ADJACENT); break;
+			case 3: field.setOutlook(FieldOutlook.THREE_ADJACENT); break;
+			case 4: field.setOutlook(FieldOutlook.FOUR_ADJACENT); break;
+			case 5: field.setOutlook(FieldOutlook.FIVE_ADJACENT); break;
+			case 6: field.setOutlook(FieldOutlook.SIX_ADJACENT); break;
+			case 7: field.setOutlook(FieldOutlook.SEVEN_ADJACENT); break;
+			case 8: field.setOutlook(FieldOutlook.EIGHT_ADJACENT); break;
+			}
+			}
 			if(adjacent == 0)
 			{
 				for(int xx = x-1; xx <= x+1; ++xx)

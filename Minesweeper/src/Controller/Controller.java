@@ -6,6 +6,7 @@ package Controller;
 
 import Model.Model;
 import View.View;
+import View.ViewDataPack;
 
 public class Controller {
 	
@@ -22,8 +23,24 @@ public class Controller {
 	{
 		model_ = model;
 		view_ = view;
-		view_.getController(this);
-		view_.update(model.getDataPack());
+		view_.set(model.getDataPack(),this);
+	}
+	
+	public  void receiveViewDataPack(ViewDataPack viewDataPack)
+	{
+		switch(viewDataPack.getEventType())
+		{
+		case LEFT_MOUSE_BUTTON_ON_BOARD:
+		
+			model_.revealField(viewDataPack.getRow(),viewDataPack.getColumn());
+			
+			break;
+		
+		case NEW_GAME_MENU_ITEM:
+			model_.newGame();
+			break;
+		}
+			view_.update(model_.getDataPack());
 	}
 
 }

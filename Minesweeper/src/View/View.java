@@ -1,5 +1,8 @@
 package View;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import Controller.Controller;
 import Model.ModelDataPack;
 
@@ -10,19 +13,25 @@ public class View {
 	Controller controller_;
 	private SaperMainFrame mainFrame_;
 	
+	/**
+	 * View class construcror, it loads files to Assets class.
+	 */
 	public View()
 	{
 		Assets.load();
-		mainFrame_ = new SaperMainFrame(ModelDataPack.getNullDataPack());
 	}
 	
-	public void getController(Controller c)
+	/**
+	 * It takes initial data pack and initializes View, creating first window.
+	 * @param dataPack
+	 */
+	public void set(ModelDataPack dataPack,Controller c)
 	{
+		mainFrame_ = new SaperMainFrame(dataPack,c);
 		controller_ = c;
 	}
 	public void update(ModelDataPack dataPack)
 	{
 		mainFrame_.update(dataPack);
-		
 	}
 }
