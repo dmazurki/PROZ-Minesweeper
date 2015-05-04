@@ -22,24 +22,30 @@ import org.xml.sax.SAXException;
  * @author Damian Mazurkiewicz
  */
 public class Settings {
-	public enum Mode
-	{
-		BEGINNEER, ADVANCED, EXPERT, CUSTOM
-	}
 	public class Score
 	{
-		String playerName_;
-		Mode mode_;
-		int time_;
+		public String playerName_;
+		public int time_;
+		public Score(String playerName, int time)
+		{
+			playerName_ = playerName;
+			time_= time;
+		}
 	}
-	private Mode mode_;
-	private int rows_;
-	private int columns_; 
-	private int mines_;
-	private Score highScores_;
+	public boolean hints_;
+	public int rows_;
+	public int columns_; 
+	public int mines_;
+	public int xWindowPos_;
+	public int yWindowPos_;
+	public int customRows_;
+	public int customColumns_;
+	public int customMines_;
+	public Score[] beginnerHighScores_;
+	public Score[] advancedHighScores_;
+	public Score[] expertHighScores_;
 	
-	private int xWindowPos;
-	private int yWindowPos;
+	
 	
 	/**
 	 * Constructor that loads game settings from XML file.  
@@ -54,14 +60,35 @@ public class Settings {
 			Node rootNode = document.getElementsByTagName("settings").item(0);
 			Element rootElement = (Element) rootNode;
 			
-			/*Reading game mode  ( difficulty level )*/
-			Element cursor = (Element) rootElement.getElementsByTagName("mode").item(0);
-			String value = cursor.getTextContent();
-			System.out.println(value);
 			
+			hints_ = parseBool(rootElement.getElementsByTagName("hints").item(0) );
 			
+			/*Reading the amount of rows in game board.*/
+			rows_ = parseInt( rootElement.getElementsByTagName("rows").item(0));
+			columns_ = parseInt( rootElement.getElementsByTagName("columns").item(0));
+			mines_ = parseInt( rootElement.getElementsByTagName("mines").item(0));
+			xWindowPos_ = parseInt( rootElement.getElementsByTagName("xWindowPos").item(0));
+			yWindowPos_ = parseInt( rootElement.getElementsByTagName("yWindowPos").item(0));
 			
+			beginnerHighScores_ = new Score[5];
+			advancedHighScores_ = new Score[5];
+			expertHighScores_ = new Score[5];
 			
+			Element beginnerCursor = (Element) rootElement.getElementsByTagName("beginnerHighScores").item(0);
+			Element advancedCursor = (Element) rootElement.getElementsByTagName("advancedHighScores").item(0);
+			Element expertCursor = (Element) rootElement.getElementsByTagName("expertHighScores").item(0);
+			for(int i = 0; i<5; ++i)
+			{
+				beginnerHighScores_[i] = parseScore(beginnerCursor.getElementsByTagName("place").item(i));
+				advancedHighScores_[i] = parseScore(advancedCursor.getElementsByTagName("place").item(i));
+				expertHighScores_[i] = parseScore(expertCursor.getElementsByTagName("place").item(i));
+				
+			}
+			customRows_ = parseInt( rootElement.getElementsByTagName("customRows").item(0));
+			customColumns_ = parseInt( rootElement.getElementsByTagName("customColumns").item(0));
+			customMines_ = parseInt( rootElement.getElementsByTagName("customMines").item(0));
+			
+		
 			
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
@@ -83,7 +110,49 @@ public class Settings {
 		
 	}
 	
+
 	
+	private Integer parseInt(Node n)
+	{
+		return Integer.parseInt(( (Element)n).getTextContent() );
+	}
+	private Boolean parseBool(Node n)
+	{
+		return Boolean.valueOf((n).getTextContent() );
+	}
+	
+	private Score parseScore(Node n)
+	{
+		Element element = (Element) n;
+		return new Score(element.getAttribute("playerName"), Integer.parseInt(element.getAttribute("time")));
+	}
+	
+	private Settings(){	}
+	
+	public Settings clone()
+	{
+		Settings retVal = new Settings();
+		retVal.hints_ = hints_;
+		retVal.rows_ = rows_;
+		retVal.columns_ = columns_;
+		retVal.mines_ = mines_;
+		retVal.xWindowPos_ = xWindowPos_;
+		retVal.yWindowPos_ = yWindowPos_;
+		retVal.customRows_ = customRows_;
+		retVal.customColumns_ = customColumns_;
+		retVal.customMines_ = customMines_;
+		retVal.beginnerHighScores_ = new Score[5];
+		retVal.advancedHighScores_ = new Score[5];
+		retVal.expertHighScores_ = new Score[5];
+		for(int i = 0; i<5; i++)
+		{
+			retVal.beginnerHighScores_[i] = new Score(beginnerHighScores_[i].playerName_,beginnerHighScores_[i].time_);
+			retVal.advancedHighScores_[i] = new Score(advancedHighScores_[i].playerName_,advancedHighScores_[i].time_);
+			retVal.expertHighScores_[i] = new Score(expertHighScores_[i].playerName_,expertHighScores_[i].time_);
+		}
+		
+		return retVal;
+	}
 	
 
 }

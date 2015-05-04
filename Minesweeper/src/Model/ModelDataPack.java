@@ -1,19 +1,14 @@
 package Model;
 
 public class ModelDataPack {
-	private int time_;
-	private FieldOutlook[][] fields_;
-	private GameState gameState_;
-	private int width_;
+	final public int time_;
+	final public FieldOutlook[][] fields_;
+	final public GameState gameState_;
+	final public FieldOutlook hint_;
 	
-	public ModelDataPack(int time, FieldOutlook[][] fields,GameState gameState)
+	public ModelDataPack(int time, FieldOutlook[][] fields,GameState gameState, FieldOutlook hint)
 	{
-		time_=time; fields_=fields; gameState_ = gameState;
+		time_=time; fields_=fields; gameState_ = gameState; hint_ = hint;
 	}
-	
-	public static ModelDataPack getNullDataPack() {
-		return new ModelDataPack(0,new FieldOutlook[0][],GameState.BEGINNING);
-		}
-	
-	public FieldOutlook[][] getFields() {return fields_;}
+
 }

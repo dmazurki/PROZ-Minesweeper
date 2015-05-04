@@ -5,6 +5,9 @@ import java.awt.Color;
 import Model.FieldOutlook;
 
 
+import Model.ModelDataPack;
+
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
@@ -12,6 +15,16 @@ import java.awt.Graphics2D;
 
 
 
+
+
+
+
+
+
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -19,13 +32,26 @@ public class SaperBoardPanel extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	private FieldOutlook[][] fields_;
+	private JLabel time_;
+	private JLabel flags_;
+	private JButton emoticon_;
 	
 	
-	public SaperBoardPanel(FieldOutlook[][] fields)
+	public SaperBoardPanel(ModelDataPack dataPack)
 	{
-		fields_ = fields;
-		add(new JLabel("State:"));
+		fields_ = dataPack.fields_;
+		add(new JLabel("Flags:"));
+		flags_ = new JLabel("00");
+		add(flags_);
+		emoticon_ = new JButton();
+		emoticon_.setIcon( new ImageIcon("Assets/happy.png"));
+		//emoticon_.setBackground(Color.WHITE);
+		emoticon_.setBorder(BorderFactory.createEmptyBorder());
+		emoticon_.setContentAreaFilled(false);
+		add(emoticon_);
 		add(new JLabel("Time:"));
+		time_ = new JLabel( (new Integer(dataPack.time_)).toString());
+		add(time_);
 		
 		
 	}
@@ -50,9 +76,10 @@ public class SaperBoardPanel extends JPanel {
        
      }
 	
-	void update(FieldOutlook[][] fields)
+	void update(ModelDataPack dataPack)
 	{
-		fields_ = fields;
+		fields_ = dataPack.fields_;
+		time_.setText((new Integer(dataPack.time_)).toString());
 		repaint(); getParent();
 	}
    

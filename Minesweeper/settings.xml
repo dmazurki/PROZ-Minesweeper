@@ -1,15 +1,35 @@
 <settings>
-	<mode>BEGINNER</mode>
-	<rows>10</rows>
-	<columns>10</columns>
-	<mines>10</mines>
-	<highScores>
-		<place1>
-			<playerName>Damian</playerName>
-			<mode>EXPERT</mode>
-			<time>100</time>
-		</place1>
-	</highScores>
+	<hints>true</hints>
+	<rows>20</rows>
+	<columns>20</columns>
+	<mines>25</mines>
+	
 	<xWindowPos>0</xWindowPos>
 	<yWindowPos>0</yWindowPos>
+	
+	<customRows>0</customRows>
+	<customColumns>0</customColumns>
+	<customMines>0</customMines>
+	
+	<beginnerHighScores>
+		<place playerName="Damian" time="10"></place>
+		<place playerName="Sokrates" time="110"></place>
+		<place playerName="-------" time="0"></place>
+		<place playerName="-------"  time="0"></place>
+		<place playerName="-------"  time="0"></place>
+	</beginnerHighScores>
+	<advancedHighScores>
+		<place playerName="Damian" time="10"></place>
+		<place playerName="Sokrates" time="110"></place>
+		<place playerName="-------" time="0"></place>
+		<place playerName="-------"  time="0"></place>
+		<place playerName="-------"  time="0"></place>
+	</advancedHighScores>
+	<expertHighScores>
+		<place playerName="Damian" time="10"></place>
+		<place playerName="Sokrates" time="110"></place>
+		<place playerName="-------" time="0"></place>
+		<place playerName="-------"  time="0"></place>
+		<place playerName="-------"  time="0"></place>
+	</expertHighScores>
 </settings>

@@ -3,11 +3,19 @@ package View;
 public class ViewDataPack {
 	public enum EventType
 	{
-		LEFT_MOUSE_BUTTON_ON_BOARD, NEW_GAME_MENU_ITEM
+		REVEAL_FIELD,
+		FLAG_FIELD,UNFLAG_FIELD,
+		NEW_GAME_MENU_ITEM,
+		PAUSE_GAME_MENU_ITEM,
+		MODE_SET,
+		CHEATING_ACTIVATED, CHEATING_DEACTIVATED,
+		HIGH_SCORES_REQUEST,
 	}
-	private EventType eventType_;
-	private int rowNr_;
-	private int columnNr_;
+	public EventType eventType_;
+	public int rowNr_;
+	public int columnNr_;
+	public int mines_;
+	
 	public ViewDataPack(EventType e)
 	{
 		eventType_ = e;
