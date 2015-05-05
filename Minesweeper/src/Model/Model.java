@@ -27,6 +27,7 @@ public class Model{
 		board_ = new Board(settings_.columns_,settings_.rows_,settings_.mines_);
 		state_ = GameState.BEGINNING;
 		time_ = 0;
+		hint_ = FieldOutlook.COVERED;
 		timer_ = new Timer(1000, new ActionListener()
 		{
 
@@ -34,7 +35,7 @@ public class Model{
 			public void actionPerformed(ActionEvent arg0) {
 					time_++;
 					if(controller_!=null)
-						controller_.update();
+						controller_.updateView();
 				}
 			
 		});
@@ -89,7 +90,13 @@ public class Model{
 	 */
 	public void hint(int x, int y)
 	{
-		hint_ = board_.getOutlook(x, y);
+		
+		if(settings_.hints_ == true)
+			hint_ = board_.getOutlook(x, y);
+	}
+	public void cancelHint()
+	{
+		hint_ = FieldOutlook.COVERED;
 	}
 	
 	/**

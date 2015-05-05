@@ -2,16 +2,19 @@ package View;
 
 import java.awt.Image;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import Model.FieldOutlook;
+import Model.GameState;
 
 public class Assets {
 	private static Image[] images_;
+	private static Icon[] icons_;
 	
 	public static void load()
 	{
-		images_ = new Image[12];
+		images_ = new Image[16];
 		images_[0] = new ImageIcon("Assets/covered.png").getImage();
 		images_[1] = new ImageIcon("Assets/mine.png").getImage();
 		images_[2] = new ImageIcon("Assets/flagged.png").getImage();
@@ -24,12 +27,23 @@ public class Assets {
 		images_[9] = new ImageIcon("Assets/sixAdjacent.png").getImage();
 		images_[10] = new ImageIcon("Assets/sevenAdjacent.png").getImage();
 		images_[11] = new ImageIcon("Assets/eightAdjacent.png").getImage();
+		
+		icons_ = new Icon[4];
+		icons_[0] = new ImageIcon("Assets/faceSmiling.png");
+		icons_[1] = new ImageIcon("Assets/faceSad.png");
+		icons_[2] = new ImageIcon("Assets/faceCool.png");
+		icons_[3] = new ImageIcon("Assets/facePirate.png");
 	
 	}
 	
 	public static Image getImage(int nr)
 	{
 		return images_[nr];
+	}
+	
+	public static Icon getIcon(int nr)
+	{
+		return icons_[nr];
 	}
 	
 	public static Image getImage(FieldOutlook field)
@@ -52,5 +66,7 @@ public class Assets {
 		
 		}
 	}
+	
+
 
 }

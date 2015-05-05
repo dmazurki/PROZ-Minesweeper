@@ -26,40 +26,29 @@ public class Controller {
 	{
 		model_ = model;
 		view_ = view;
+	}
+	
+	public  void run()
+	{
 		model_.getController(this);
-		view_.set(model.getDataPack(),this);
+		view_.getController(this);
+		updateView();
 	}
-	public void update()
-	{
-		view_.update(model_.getDataPack());
-	}
-	public  void receiveViewDataPack(ViewDataPack viewDataPack)
-	{
-		switch(viewDataPack.getEventType())
-		{
-		case REVEAL_FIELD:
-		
-			model_.revealField(viewDataPack.getRow(),viewDataPack.getColumn());
-			
-			break;
-		
-		case NEW_GAME_MENU_ITEM:
-			model_.newGame();
-			break;
-		}
-			view_.update(model_.getDataPack());
-	}
+	
+	public void updateView(){view_.update(model_.getDataPack());}
 	
 	public void handleEvent(BoardEvent e)
 	{
 		switch(e.action_)
 		{
-			case LEFT_MOUSE_BUTTON_PRESSED : model_.revealField(e.row_,e.column_);
-			case RIGHT_MOUSE_BUTTON_PRESSED : model_.switchFlag(e.row_, e.column_);
+			case LEFT_MOUSE_BUTTON_PRESSED : model_.revealField(e.column_,e.row_); break;
+			case RIGHT_MOUSE_BUTTON_PRESSED : model_.switchFlag(e.column_,e.row_);break;
+			case H_KEY_PRESSED : model_.hint(e.column_,e.row_); break;
+			case H_KEY_RELASED : model_.cancelHint(); break;
 			
 		default:
 		}
-		view_.update(model_.getDataPack());	
+		updateView();	
 	}
 	
 	public void handleEvent(MenuEvent e)
@@ -75,7 +64,7 @@ public class Controller {
 			
 		default:
 		}
-		view_.update(model_.getDataPack());	
+		updateView();	
 	}
 	
 	public Settings getSettings()

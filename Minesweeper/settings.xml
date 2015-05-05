@@ -1,13 +1,13 @@
 <settings>
 	<hints>true</hints>
-	<rows>20</rows>
-	<columns>20</columns>
-	<mines>25</mines>
+	<rows>10</rows>
+	<columns>10</columns>
+	<mines>10</mines>
 	
-	<xWindowPos>0</xWindowPos>
-	<yWindowPos>0</yWindowPos>
+	<xWindowPos>200</xWindowPos>
+	<yWindowPos>50</yWindowPos>
 	
-	<customRows>0</customRows>
+	<customRows>10</customRows>
 	<customColumns>0</customColumns>
 	<customMines>0</customMines>
 	

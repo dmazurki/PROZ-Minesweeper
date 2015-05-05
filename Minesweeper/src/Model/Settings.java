@@ -139,6 +139,7 @@ public class Settings {
 		retVal.xWindowPos_ = xWindowPos_;
 		retVal.yWindowPos_ = yWindowPos_;
 		retVal.customRows_ = customRows_;
+	
 		retVal.customColumns_ = customColumns_;
 		retVal.customMines_ = customMines_;
 		retVal.beginnerHighScores_ = new Score[5];

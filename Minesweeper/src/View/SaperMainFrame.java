@@ -1,18 +1,30 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import Controller.Controller;
 import Model.ModelDataPack;
@@ -30,32 +42,66 @@ public class SaperMainFrame extends JFrame {
 	private SaperBoardPanel saperBoard_;
 	private Controller controller_;
 	private Settings settings_;
+	private SaperMainFrame thisFrame_;
 
 	
 	
-	public SaperMainFrame(ModelDataPack dataPack, Controller controller)
+	public SaperMainFrame(Controller controller)
 	{
 		
 		setIconImage(Assets.getImage(Model.FieldOutlook.MINE));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocation(0, 0);
 		controller_ = controller;
+		thisFrame_ = this;
 		settings_ = controller.getSettings();
-		saperBoard_ = new SaperBoardPanel(dataPack);
-		saperBoard_.addMouseListener(new MouseOnGameBoardListener());
+		setLocation(settings_.xWindowPos_, settings_.yWindowPos_);
+		saperBoard_ = new SaperBoardPanel();
+		
+		setFocusable(true);
+		saperBoard_.addMouseListener(new BoardListener());
 		createMenuBar(controller_);
 		setTitle();
 		
 		add(saperBoard_,BorderLayout.CENTER);
-		setSize(View.BLOCK_SIZE*(dataPack.fields_[0].length+1), View.BLOCK_SIZE*(dataPack.fields_.length+4));
+		addKeyListener(new KeyListener()
+		{
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_H)
+				{
+					Point p = new Point(MouseInfo.getPointerInfo().getLocation().x,MouseInfo.getPointerInfo().getLocation().y);
+					SwingUtilities.convertPointFromScreen(p,saperBoard_);
+					controller_.handleEvent(new BoardEvent(
+							
+							((p.x -saperBoard_.getBoardX())/View.BLOCK_SIZE),
+							( p.y-saperBoard_.getBoardY())/View.BLOCK_SIZE,
+							BoardEvent.Action.H_KEY_PRESSED));
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_H)
+				{
+					controller_.handleEvent(new BoardEvent(0,0,BoardEvent.Action.H_KEY_RELASED));
+				}
+				
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {}	
+		}
+	   );
 		
 		setVisible(true);
 		setResizable(false);
+		
 	}
 	void update(ModelDataPack dataPack)
 	{
 		saperBoard_.update(dataPack);
-		
 		setSize(View.BLOCK_SIZE*(dataPack.fields_[0].length+1), View.BLOCK_SIZE*(dataPack.fields_.length+4));
 	}
 	/**
@@ -151,8 +197,37 @@ public class SaperMainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				controller_.handleEvent(new MenuEvent(MenuEvent.Action.CUSTOM_MENU_ITEM_CLICKED));
-				settings_ = controller_.getSettings();
+				/* Creating dialog window for choosing custom board settings. */ 
+				JDialog options = new JDialog(thisFrame_,"Custom");
+				options.setLayout(new BorderLayout());
+				
+				JPanel input = new JPanel();
+				input.setLayout(new GridLayout(3,2));
+				
+				JLabel columnsL = new JLabel("Columns:");
+				JTextField columnsF = new JTextField((new Integer(settings_.customColumns_)).toString());
+				JLabel rowsL = new JLabel("Rows:");
+				JTextField rowsF = new JTextField((new Integer(settings_.customRows_)).toString());
+				JLabel minesL = new JLabel("Mines:");
+				JTextField minesF = new JTextField((new Integer(settings_.customMines_)).toString());
+				
+				input.add(columnsL);input.add(columnsF);
+				input.add(rowsL);	input.add(rowsF);
+				input.add(minesL);	input.add(minesF);
+				
+				JPanel buttons = new JPanel(new FlowLayout());
+				
+				JButton apply = new JButton("Ok");
+				JButton cancel = new JButton("Cancel");
+				buttons.add(apply); buttons.add(cancel);
+				
+				options.getContentPane().add(input,BorderLayout.CENTER);
+				options.getContentPane().add(buttons,BorderLayout.SOUTH);
+		
+				options.pack();
+				options.setResizable(false);
+				options.setLocationRelativeTo(thisFrame_);
+				options.setVisible(true);
 			}
 	    }
 	    );
@@ -198,7 +273,7 @@ public class SaperMainFrame extends JFrame {
 	/**
 	 * Mouse listener that handles player moves on game board. Then it sends proper package to controller.
 	 */
-	private class MouseOnGameBoardListener extends MouseAdapter
+	private class BoardListener extends MouseAdapter 
 	{
 		@Override
 		public void mousePressed(MouseEvent e) {
@@ -216,8 +291,10 @@ public class SaperMainFrame extends JFrame {
 					(e.getY()-saperBoard_.getBoardY())/View.BLOCK_SIZE,
 					BoardEvent.Action.RIGHT_MOUSE_BUTTON_PRESSED));
 			}
-		}	
+		}
 	}
+	
+	
 	
 	public void setTitle()
 	{

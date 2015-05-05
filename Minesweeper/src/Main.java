@@ -16,9 +16,8 @@ public class Main {
 				{
 					Model model = new Model();
 					View view = new View();
-					@SuppressWarnings("unused")
 					Controller controller = new Controller(model,view);
-					
+					controller.run();
 				}
 			});
 		}

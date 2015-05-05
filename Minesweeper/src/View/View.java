@@ -25,9 +25,9 @@ public class View {
 	 * It takes initial data pack and initializes View, creating first window.
 	 * @param dataPack
 	 */
-	public void set(ModelDataPack dataPack,Controller c)
+	public void getController(Controller c)
 	{
-		mainFrame_ = new SaperMainFrame(dataPack,c);
+		mainFrame_ = new SaperMainFrame(c);
 		controller_ = c;
 	}
 	public void update(ModelDataPack dataPack)
