@@ -4,7 +4,9 @@
 
 package Controller;
 
+import Model.GameState;
 import Model.Model;
+import Model.ModelDataPack;
 import Model.Settings;
 import View.View;
 import View.ViewDataPack;
@@ -48,7 +50,16 @@ public class Controller {
 			
 		default:
 		}
+		
 		updateView();	
+		ModelDataPack pack = model_.getDataPack();
+		if(pack.gameState_ == GameState.WON)
+		{
+			if(model_.canBeInHighScores(pack.time_, model_.getMode()))
+			{
+				view_.addHighScore();
+			}
+		}
 	}
 	
 	public void handleEvent(MenuEvent e)
@@ -60,6 +71,7 @@ public class Controller {
 			case  BEGINNER_MENU_ITEM_CLICKED : model_.setMode(10, 10, 10); model_.newGame(); break;
 			case  ADVANCED_MENU_ITEM_CLICKED : model_.setMode(16, 16, 40); model_.newGame(); break;
 			case  EXPERT_MENU_ITEM_CLICKED : model_.setMode( 30, 16, 99); model_.newGame(); break;
+			case CUSTOM_MENU_ITEM_CLICKED : model_.setMode(e.columns_, e.rows_, e.mines_); model_.newGame(); break;
 			case HINT_MENU_ITEM_CLICKED : model_.switchHints(); break;
 			
 		default:

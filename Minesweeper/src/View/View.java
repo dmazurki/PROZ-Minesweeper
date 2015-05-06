@@ -34,4 +34,8 @@ public class View {
 	{
 		mainFrame_.update(dataPack);
 	}
+	public void addHighScore()
+	{
+		
+	}
 }

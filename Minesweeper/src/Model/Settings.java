@@ -31,7 +31,16 @@ public class Settings {
 			playerName_ = playerName;
 			time_= time;
 		}
+		public Score(Score s)
+		{
+			playerName_ = s.playerName_;
+			time_ = s.time_;
+		}
 	}
+	public final static int SCORES_NUMBER = 5;
+	
+	
+	
 	public boolean hints_;
 	public int rows_;
 	public int columns_; 
@@ -109,7 +118,64 @@ public class Settings {
 	{
 		
 	}
+	public boolean canBeInHighScores(int time, Settings.Mode mode)
+	{
+		Score[] scores;
+		switch (mode)
+		{
+			case BEGINNER: scores = beginnerHighScores_; break;
+			case ADVANCED: scores = advancedHighScores_; break;
+			case EXPERT: scores = expertHighScores_; break;
+			default: return false;
+		}
+		for(int i = 0; i<SCORES_NUMBER; ++i)
+		{
+			if(scores[i].time_>time)
+				return true;
+		}
+		return false;
+	}
 	
+	public void addHighscore(String playerName, int time, Settings.Mode mode)
+	{
+		Score[] scores;
+		switch (mode)
+		{
+			case BEGINNER: scores = beginnerHighScores_; break;
+			case ADVANCED: scores = advancedHighScores_; break;
+			case EXPERT: scores = expertHighScores_; break;
+			default: return;
+		}
+		Score[] newScores = new Score[SCORES_NUMBER];
+		boolean inserted = false;
+		for(int i = 0; i<SCORES_NUMBER; ++i)
+		{
+			if(scores[i].time_>time&&!inserted)
+			{
+				newScores[i] = new Score(playerName,time);
+				inserted = true;
+				--i;
+			}
+			else
+			{
+				if(inserted == true && i+1 < SCORES_NUMBER)
+				{
+					newScores[i+1] = new Score(scores[i]);
+				}
+				else
+				{
+					newScores[i] = new Score(scores[i]);
+				}
+			}
+		}
+		switch (mode)
+		{
+			case BEGINNER: beginnerHighScores_ = newScores; break;
+			case ADVANCED: advancedHighScores_ = newScores; break;
+			case EXPERT: expertHighScores_ = newScores; break;
+			default: return;
+		}
+	}
 
 	
 	private Integer parseInt(Node n)
@@ -155,5 +221,19 @@ public class Settings {
 		return retVal;
 	}
 	
+	public enum Mode {
+		BEGINNER, ADVANCED, EXPERT, CUSTOM;
+		
+		public static Mode getMode(int columns, int rows, int mines)
+		{
+			if(columns == 10 && rows == 10 && mines == 10)
+				return BEGINNER;
+			if(columns == 16 && rows == 16 && mines == 40)
+				return ADVANCED;
+			if(columns == 30 && rows == 16 && mines == 99)
+				return EXPERT;
+			return CUSTOM;
+		}
+	}
 
 }

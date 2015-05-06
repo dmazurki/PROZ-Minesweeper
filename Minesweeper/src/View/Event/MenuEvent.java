@@ -13,10 +13,22 @@ public class MenuEvent {
 	}
 	
 	final public Action action_;
+	final public int rows_;
+	final public int columns_;
+	final public int mines_;
 	
 	public MenuEvent(Action action)
 	{
+		action_ = action; 
+		rows_ = columns_ = mines_ = 0;
+	}
+	
+	public MenuEvent(Action action, int columns, int rows, int mines)
+	{
 		action_ = action;
+		columns_ = columns;
+		rows_= rows;
+		mines_ = mines;
 	}
 	
 }

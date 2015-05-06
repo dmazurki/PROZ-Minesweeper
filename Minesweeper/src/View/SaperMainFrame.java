@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.security.InvalidParameterException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
@@ -135,6 +137,74 @@ public class SaperMainFrame extends JFrame {
 			
 		});
 		JMenuItem highScoresMenuItem = new JMenuItem("Highscores");
+		highScoresMenuItem.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JDialog scores = new JDialog(thisFrame_,"Highscores");
+				
+				scores.setLayout(new BorderLayout());
+				JPanel tables = new JPanel(new FlowLayout());
+				
+				JPanel beginnerPanel = new JPanel(new BorderLayout());
+				JPanel beginnerTable = new JPanel(new GridLayout(Settings.SCORES_NUMBER,2));
+				
+				for(int i = 0; i<Settings.SCORES_NUMBER; ++i)
+				{
+					beginnerTable.add( new JLabel(settings_.beginnerHighScores_[i].playerName_));
+					beginnerTable.add( new JLabel(new Integer(settings_.beginnerHighScores_[i].time_).toString()));
+				}
+				beginnerPanel.add(new JLabel("Beginner"),BorderLayout.NORTH);
+				beginnerPanel.add(beginnerTable,BorderLayout.CENTER);
+				tables.add(beginnerPanel);
+				
+				JPanel advancedPanel = new JPanel(new BorderLayout());
+				JPanel advancedTable = new JPanel(new GridLayout(Settings.SCORES_NUMBER,2));
+				for(int i = 0; i<Settings.SCORES_NUMBER; ++i)
+				{
+					advancedTable.add( new JLabel(settings_.advancedHighScores_[i].playerName_));
+					advancedTable.add( new JLabel(new Integer(settings_.advancedHighScores_[i].time_).toString()));
+				}
+				advancedPanel.add(new JLabel("Advanced"),BorderLayout.NORTH);
+				advancedPanel.add(advancedTable,BorderLayout.CENTER);
+				tables.add(advancedPanel);
+				
+				JPanel expertPanel = new JPanel(new BorderLayout());
+				JPanel expertTable = new JPanel(new GridLayout(Settings.SCORES_NUMBER,2));
+				for(int i = 0; i<Settings.SCORES_NUMBER; ++i)
+				{
+					expertTable.add( new JLabel(settings_.expertHighScores_[i].playerName_));
+					expertTable.add( new JLabel(new Integer(settings_.expertHighScores_[i].time_).toString()));
+				}
+				expertPanel.add(new JLabel("Expert"),BorderLayout.NORTH);
+				expertPanel.add(expertTable,BorderLayout.CENTER);
+				tables.add(expertPanel);
+				
+				
+				
+				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						scores.dispose();
+						
+					}
+				});
+				JPanel buttonPanel = new JPanel(new FlowLayout());
+				buttonPanel.add(okButton);
+				scores.add(buttonPanel,BorderLayout.SOUTH);
+				scores.add(tables,BorderLayout.CENTER);
+				
+				scores.pack();
+				scores.setResizable(false);
+				scores.setLocationRelativeTo(thisFrame_);
+				scores.setVisible(true);
+				
+			}
+			
+			
+		});
 		
 		JMenuItem exitMenuItem = new JMenuItem("Exit");
 		exitMenuItem.addActionListener(new ActionListener() {
@@ -218,7 +288,39 @@ public class SaperMainFrame extends JFrame {
 				JPanel buttons = new JPanel(new FlowLayout());
 				
 				JButton apply = new JButton("Ok");
+				apply.addActionListener(new ActionListener(){
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						try{
+							
+						controller_.handleEvent(new MenuEvent(
+								MenuEvent.Action.CUSTOM_MENU_ITEM_CLICKED
+								,Integer.parseInt(columnsF.getText())
+								,Integer.parseInt(rowsF.getText())
+								,Integer.parseInt(minesF.getText())));
+						
+						settings_ = controller_.getSettings();
+						setTitle();
+						}
+						catch(InvalidParameterException e)
+						{
+							JOptionPane.showMessageDialog(thisFrame_, "Invalid parameters.");
+						}
+						
+						options.dispose();
+					}
+					
+				});
 				JButton cancel = new JButton("Cancel");
+				cancel.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						options.dispose();
+						
+					}
+					
+				});
 				buttons.add(apply); buttons.add(cancel);
 				
 				options.getContentPane().add(input,BorderLayout.CENTER);
@@ -298,15 +400,12 @@ public class SaperMainFrame extends JFrame {
 	
 	public void setTitle()
 	{
-		if(settings_.columns_ == 10 && settings_.rows_ == 10 && settings_.mines_ == 10)
-			super.setTitle("Sapper (beginner)");
-		else
-		if(settings_.columns_ == 16 && settings_.rows_ == 16 && settings_.mines_ == 40)
-			super.setTitle("Sapper (advanced)");
-		else
-		if(settings_.columns_ == 30 && settings_.rows_ == 16 && settings_.mines_ == 99)
-			super.setTitle("Sapper (expert)");
-		else
-			super.setTitle("Sapper");
+		switch(Settings.Mode.getMode(settings_.columns_, settings_.rows_, settings_.mines_))
+		{
+			case BEGINNER : super.setTitle("Sapper (beginner)"); break;
+			case ADVANCED: super.setTitle("Sapper (advanced)"); break;
+			case EXPERT : super.setTitle("Sapper (expert)"); break;
+			default : super.setTitle("Sapper (custom)"); break;
+		}
 	}
 }

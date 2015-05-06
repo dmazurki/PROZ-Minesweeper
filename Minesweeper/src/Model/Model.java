@@ -2,6 +2,7 @@ package Model;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.InvalidParameterException;
 
 import javax.swing.Timer;
 
@@ -94,15 +95,17 @@ public class Model{
 		if(settings_.hints_ == true)
 			hint_ = board_.getOutlook(x, y);
 	}
+	
 	public void cancelHint()
 	{
 		hint_ = FieldOutlook.COVERED;
 	}
 	
 	/**
-	 * 
-	 * @param x
-	 * @param y
+	 * This method sets or removed the flag on choosen field on game board. If the field is not flagged and is covered it 
+	 * sets the flag, if not, it removes the flag from field. It uses method of class Board to perform these actions.
+	 * @param x - column of the field
+	 * @param y - row of the field
 	 */
 	public void switchFlag(int x, int y)
 	{
@@ -112,16 +115,38 @@ public class Model{
 			board_.flagField(x, y);
 	}
 	
-	public void pause(){state_ = GameState.PAUSED; timer_.stop();}
+	/**
+	 * Function that pauses the game, it stops the inner timer of Model and sets GameState variable to PAUSED.
+	 */
+	public void pause()
+	{
+		state_ = GameState.PAUSED;
+		timer_.stop();
+	}
 	
 	public void setMode(int columns, int rows, int mines) 
 	{
+		if(columns<8 || columns>40 || rows<8 || rows>40 || mines<1 || mines > columns*rows-1)
+			throw new InvalidParameterException();
 		settings_.rows_ = rows;
 		settings_.columns_ = columns;
 		settings_.mines_ = mines;
 	}
 	
-	public ModelDataPack getDataPack(){	return new ModelDataPack(time_,board_.getFields(),state_,hint_); }
+	public void setMode(Settings.Mode mode) 
+	{
+		switch (mode)
+		{
+		case BEGINNER : setMode(10,10,10); break;
+		case ADVANCED : setMode(16,16,40); break;
+		case EXPERT : setMode(30,16,99); break;
+		}
+	}
+	
+	public ModelDataPack getDataPack()
+	{	
+		return new ModelDataPack(time_,board_.getFields(),state_,hint_); 
+	}
 	
 	public void newGame()
 	{
@@ -150,6 +175,21 @@ public class Model{
 	public Settings getSettings()
 	{
 		return settings_.clone();
+	}
+	
+	public boolean canBeInHighScores(int time, Settings.Mode mode)
+	{
+		return settings_.canBeInHighScores(time, mode);
+	}
+	
+	public void addHighscore(String playerName, int time, Settings.Mode mode)
+	{
+		settings_.addHighscore(playerName, time, mode);
+	}
+	
+	public Settings.Mode getMode()
+	{
+		return Settings.Mode.getMode(settings_.columns_, settings_.rows_, settings_.mines_);
 	}
 
 }
