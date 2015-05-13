@@ -150,58 +150,32 @@ public class SaperMainFrame extends JFrame {
 				scores.setLayout(new BorderLayout());
 				JPanel tables = new JPanel(new FlowLayout());
 				
-				JPanel beginnerPanel = new JPanel(new BorderLayout());
-				JPanel beginnerTable = new JPanel(new GridLayout(Settings.SCORES_NUMBER,2));
+				JPanel tablePanel = new JPanel(new BorderLayout());
 				
-				Object [][] tbl =  new Object[5][];
-				for(int i =0;i<5; ++i)
+				Object [][] scoresMatrix =  new Object[Settings.SCORE_NUMBER][];
+			
+				for(int i =0;i<Settings.SCORE_NUMBER; ++i)
 				{
-					tbl[i] = new Object[2];
-					tbl[i][0] = settings_.beginnerHighScores_[i].playerName_;
-					tbl[i][1] = new Integer(settings_.beginnerHighScores_[i].time_).toString();
+					scoresMatrix[i] = new Object[3];
+					scoresMatrix[i][0] = settings_.highScores_[i].playerName_;
+					scoresMatrix[i][1] = settings_.highScores_[i].mode_.toString();
+					scoresMatrix[i][2] = new Integer(settings_.highScores_[i].time_).toString();
 				}
-				Object [] columns = new Object[2];
+				
+				Object [] columns = new Object[3];
 				columns[0] = new String("Player");
-				columns[1] = new String("Time");
-				JTable bT = new JTable(tbl,columns);
-				bT.setEnabled(false);
-				bT.setBackground(Color.LIGHT_GRAY);
+				columns[1] = new String("Mode");
+				columns[2] = new String("Time");
+				
+				JTable scoreTable = new JTable(scoresMatrix,columns);
+				scoreTable.setEnabled(false);
+				scoreTable.setBackground(Color.LIGHT_GRAY);
+				
+				tablePanel.add(scoreTable.getTableHeader(),BorderLayout.NORTH);
+				tablePanel.add(scoreTable,BorderLayout.CENTER);
+				
+				tables.add(tablePanel);
 			
-				
-			//	for(int i = 0; i<Settings.SCORES_NUMBER; ++i)
-			//	{
-			//		beginnerTable.add( new JLabel(settings_.beginnerHighScores_[i].playerName_));
-			//		beginnerTable.add( new JLabel(new Integer(settings_.beginnerHighScores_[i].time_).toString()));
-			//	}
-				beginnerPanel.add(new JLabel("Beginner"),BorderLayout.NORTH);
-			//	beginnerPanel.add(beginnerTable,BorderLayout.CENTER);
-				beginnerPanel.add(bT,BorderLayout.CENTER);
-				tables.add(beginnerPanel);
-			
-				JPanel advancedPanel = new JPanel(new BorderLayout());
-				JPanel advancedTable = new JPanel(new GridLayout(Settings.SCORES_NUMBER,2));
-				for(int i = 0; i<Settings.SCORES_NUMBER; ++i)
-				{
-					advancedTable.add( new JLabel(settings_.advancedHighScores_[i].playerName_));
-					advancedTable.add( new JLabel(new Integer(settings_.advancedHighScores_[i].time_).toString()));
-				}
-				advancedPanel.add(new JLabel("Advanced"),BorderLayout.NORTH);
-				advancedPanel.add(advancedTable,BorderLayout.CENTER);
-				tables.add(advancedPanel);
-				
-				JPanel expertPanel = new JPanel(new BorderLayout());
-				JPanel expertTable = new JPanel(new GridLayout(Settings.SCORES_NUMBER,2));
-				for(int i = 0; i<Settings.SCORES_NUMBER; ++i)
-				{
-					expertTable.add( new JLabel(settings_.expertHighScores_[i].playerName_));
-					expertTable.add( new JLabel(new Integer(settings_.expertHighScores_[i].time_).toString()));
-				}
-				expertPanel.add(new JLabel("Expert"),BorderLayout.NORTH);
-				expertPanel.add(expertTable,BorderLayout.CENTER);
-				tables.add(expertPanel);
-				
-				
-				
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					

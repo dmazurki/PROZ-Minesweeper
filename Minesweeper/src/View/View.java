@@ -45,6 +45,11 @@ public class View {
 	{
 		mainFrame_.update(dataPack);
 	}
+	
+	/**
+	 * Method that shows dialog window, in which player can type his/her name, then it calls the controller
+	 * method, that tries to add new higscore to HighScores table.
+	 */
 	public void addHighScore()
 	{
 		JDialog dialog = new JDialog(mainFrame_,"New highscore");
@@ -67,12 +72,9 @@ public class View {
 			});
 			JButton cancelButton = new JButton("Cancel");
 			cancelButton.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					dialog.dispose();
-					
-					
 				}
 			});
 			buttons.add(okButton);

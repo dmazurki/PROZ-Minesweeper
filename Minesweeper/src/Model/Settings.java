@@ -13,6 +13,8 @@ import java.io.IOException;
 
 
 
+import java.util.LinkedList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -32,22 +34,29 @@ import org.xml.sax.SAXException;
  * @author Damian Mazurkiewicz
  */
 public class Settings {
+	
+	public final static int SCORE_NUMBER = 10;
 	public class Score
 	{
 		public String playerName_;
 		public int time_;
-		public Score(String playerName, int time)
+		public Mode mode_;
+		public Score(String playerName, Mode mode,  int time)
 		{
 			playerName_ = playerName;
 			time_= time;
+			mode_ = mode;
 		}
 		public Score(Score s)
 		{
 			playerName_ = s.playerName_;
 			time_ = s.time_;
+			mode_ = s.mode_;
 		}
+		
+		
 	}
-	public final static int SCORES_NUMBER = 5;
+	
 	
 	
 	
@@ -60,9 +69,9 @@ public class Settings {
 	public int customRows_;
 	public int customColumns_;
 	public int customMines_;
-	public Score[] beginnerHighScores_;
-	public Score[] advancedHighScores_;
-	public Score[] expertHighScores_;
+	public Score[] highScores_;
+	public LinkedList<Score> scores_;
+
 	
 	
 	
@@ -89,20 +98,14 @@ public class Settings {
 			xWindowPos_ = parseInt( rootElement.getElementsByTagName("xWindowPos").item(0));
 			yWindowPos_ = parseInt( rootElement.getElementsByTagName("yWindowPos").item(0));
 			
-			beginnerHighScores_ = new Score[5];
-			advancedHighScores_ = new Score[5];
-			expertHighScores_ = new Score[5];
+			highScores_ = new Score[SCORE_NUMBER];
 			
-			Element beginnerCursor = (Element) rootElement.getElementsByTagName("beginnerHighScores").item(0);
-			Element advancedCursor = (Element) rootElement.getElementsByTagName("advancedHighScores").item(0);
-			Element expertCursor = (Element) rootElement.getElementsByTagName("expertHighScores").item(0);
-			for(int i = 0; i<5; ++i)
-			{
-				beginnerHighScores_[i] = parseScore(beginnerCursor.getElementsByTagName("place").item(i));
-				advancedHighScores_[i] = parseScore(advancedCursor.getElementsByTagName("place").item(i));
-				expertHighScores_[i] = parseScore(expertCursor.getElementsByTagName("place").item(i));
+			Element cursor = (Element) rootElement.getElementsByTagName("highScores").item(0);
+			for(int i = 0; i<SCORE_NUMBER; ++i)
+				highScores_[i] = parseScore(cursor.getElementsByTagName("place").item(i));
+			
 				
-			}
+			
 			customRows_ = parseInt( rootElement.getElementsByTagName("customRows").item(0));
 			customColumns_ = parseInt( rootElement.getElementsByTagName("customColumns").item(0));
 			customMines_ = parseInt( rootElement.getElementsByTagName("customMines").item(0));
@@ -167,35 +170,17 @@ public class Settings {
 		customMines.setTextContent(new Integer(customMines_).toString());
 		rootElement.appendChild(customMines);
 		
-		Element beginnerHighSores = doc.createElement("beginnerHighScores");
-		for(int i = 0; i< beginnerHighScores_.length; ++i)
+		Element highSores = doc.createElement("highScores");
+		for(int i = 0; i< highScores_.length; ++i)
 		{
 			Element place = doc.createElement("place");
-			place.setAttribute("playerName", beginnerHighScores_[i].playerName_);
-			place.setAttribute("time", new Integer(beginnerHighScores_[i].time_).toString());
-			beginnerHighSores.appendChild(place);
+			place.setAttribute("playerName", highScores_[i].playerName_);
+			place.setAttribute("time", highScores_[i].mode_.toString());
+			place.setAttribute("time", new Integer(highScores_[i].time_).toString());
+			highSores.appendChild(place);
 		}
-		rootElement.appendChild(beginnerHighSores);
+		rootElement.appendChild(highSores);
 		
-		Element advancedHighSores = doc.createElement("advancedHighScores");
-		for(int i = 0; i< advancedHighScores_.length; ++i)
-		{
-			Element place = doc.createElement("place");
-			place.setAttribute("playerName", advancedHighScores_[i].playerName_);
-			place.setAttribute("time", new Integer(advancedHighScores_[i].time_).toString());
-			advancedHighSores.appendChild(place);
-		}
-		rootElement.appendChild(advancedHighSores);
-		
-		Element expertHighSores = doc.createElement("expertHighScores");
-		for(int i = 0; i< expertHighScores_.length; ++i)
-		{
-			Element place = doc.createElement("place");
-			place.setAttribute("playerName", expertHighScores_[i].playerName_);
-			place.setAttribute("time", new Integer(expertHighScores_[i].time_).toString());
-			expertHighSores.appendChild(place);
-		}
-		rootElement.appendChild(expertHighSores);
 		
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
@@ -217,17 +202,10 @@ public class Settings {
 	}
 	public boolean canBeInHighScores(int time, Settings.Mode mode)
 	{
-		Score[] scores;
-		switch (mode)
+	
+		for(int i = 0; i<SCORE_NUMBER; ++i)
 		{
-			case BEGINNER: scores = beginnerHighScores_; break;
-			case ADVANCED: scores = advancedHighScores_; break;
-			case EXPERT: scores = expertHighScores_; break;
-			default: return false;
-		}
-		for(int i = 0; i<SCORES_NUMBER; ++i)
-		{
-			if(scores[i].time_>time)
+			if(highScores_[i].time_>time && !highScores_[i].mode_.biggerThan(mode))
 				return true;
 		}
 		return false;
@@ -235,43 +213,30 @@ public class Settings {
 	
 	public void addHighscore(String playerName, int time, Settings.Mode mode)
 	{
-		Score[] scores;
-		switch (mode)
-		{
-			case BEGINNER: scores = beginnerHighScores_; break;
-			case ADVANCED: scores = advancedHighScores_; break;
-			case EXPERT: scores = expertHighScores_; break;
-			default: return;
-		}
-		Score[] newScores = new Score[SCORES_NUMBER];
+		
+		Score[] newScores = new Score[SCORE_NUMBER];
 		boolean inserted = false;
-		for(int i = 0; i<SCORES_NUMBER; ++i)
+		for(int i = 0; i<SCORE_NUMBER; ++i)
 		{
-			if(scores[i].time_>time&&!inserted)
+			if(highScores_[i].time_>time&& !inserted && !highScores_[i].mode_.biggerThan(mode))
 			{
-				newScores[i] = new Score(playerName,time);
+				newScores[i] = new Score(playerName,mode,time);
 				inserted = true;
 				--i;
 			}
 			else
 			{
-				if(inserted == true && i+1 < SCORES_NUMBER)
+				if(inserted == true && i+1 < SCORE_NUMBER)
 				{
-					newScores[i+1] = new Score(scores[i]);
+					newScores[i+1] = new Score(highScores_[i]);
 				}
 				else
 				{
-					newScores[i] = new Score(scores[i]);
+					newScores[i] = new Score(highScores_[i]);
 				}
 			}
 		}
-		switch (mode)
-		{
-			case BEGINNER: beginnerHighScores_ = newScores; break;
-			case ADVANCED: advancedHighScores_ = newScores; break;
-			case EXPERT: expertHighScores_ = newScores; break;
-			default: return;
-		}
+		highScores_ = newScores;
 	}
 
 	
@@ -287,7 +252,7 @@ public class Settings {
 	private Score parseScore(Node n)
 	{
 		Element element = (Element) n;
-		return new Score(element.getAttribute("playerName"), Integer.parseInt(element.getAttribute("time")));
+		return new Score(element.getAttribute("playerName"), Mode.parseMode(element.getAttribute("mode")), Integer.parseInt(element.getAttribute("time")));
 	}
 	
 	private Settings(){	}
@@ -305,22 +270,21 @@ public class Settings {
 	
 		retVal.customColumns_ = customColumns_;
 		retVal.customMines_ = customMines_;
-		retVal.beginnerHighScores_ = new Score[5];
-		retVal.advancedHighScores_ = new Score[5];
-		retVal.expertHighScores_ = new Score[5];
-		for(int i = 0; i<5; i++)
-		{
-			retVal.beginnerHighScores_[i] = new Score(beginnerHighScores_[i].playerName_,beginnerHighScores_[i].time_);
-			retVal.advancedHighScores_[i] = new Score(advancedHighScores_[i].playerName_,advancedHighScores_[i].time_);
-			retVal.expertHighScores_[i] = new Score(expertHighScores_[i].playerName_,expertHighScores_[i].time_);
-		}
+		retVal.highScores_ = new Score[SCORE_NUMBER];
+		for(int i = 0; i<SCORE_NUMBER; i++)
+			retVal.highScores_[i] = new Score(highScores_[i].playerName_,highScores_[i].mode_,highScores_[i].time_);
 		
 		return retVal;
 	}
 	
 	public enum Mode {
-		BEGINNER, ADVANCED, EXPERT, CUSTOM;
+		CUSTOM(0),BEGINNER(1), ADVANCED(2), EXPERT(3); 
 		
+		private int value_;
+		private Mode(int value)
+		{
+			value_=value;
+		}
 		public static Mode getMode(int columns, int rows, int mines)
 		{
 			if(columns == 10 && rows == 10 && mines == 10)
@@ -330,6 +294,24 @@ public class Settings {
 			if(columns == 30 && rows == 16 && mines == 99)
 				return EXPERT;
 			return CUSTOM;
+		}
+		
+		public static Mode parseMode(String s)
+		{
+			if(s=="BEGINNER")
+				return Mode.BEGINNER;
+			if(s=="ADVANCED")
+				return Mode.ADVANCED;
+			if(s=="EXPERT")
+				return Mode.EXPERT;
+			return Mode.CUSTOM;
+		}
+		
+		public boolean biggerThan(Mode m)
+		{
+			if(value_>m.value_)
+				return true;
+			return false;
 		}
 	}
 

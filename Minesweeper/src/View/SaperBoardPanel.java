@@ -57,17 +57,15 @@ public class SaperBoardPanel extends JPanel {
 
         g2d.setColor(Color.blue);
       
-		
+		/*Drawing game board. */
         for(int i = 0; i<fields_.length;++i)
-        {
         	for(int j = 0; j<fields_[i].length; ++j)
-        	{
-   
-        		 g2d.drawImage(Assets.getImage(fields_[i][j]),getBoardX()+ View.BLOCK_SIZE*j,getBoardY()+View.BLOCK_SIZE*i,null);
-        	}
-        }
+        		g2d.drawImage(Assets.getImage(fields_[i][j]),getBoardX()+ View.BLOCK_SIZE*j,getBoardY()+View.BLOCK_SIZE*i,null);
+        	
+        /*Drawing hint. */
         if(hint_ != FieldOutlook.COVERED)
         {
+        	/*Converting mouse coordinates from a screen to mouse position on game board. */
         	Point p = new Point(MouseInfo.getPointerInfo().getLocation().x,MouseInfo.getPointerInfo().getLocation().y);
         	SwingUtilities.convertPointFromScreen(p,this);
         	g2d.drawImage(Assets.getImage(hint_), p.x, p.y, null);
