@@ -11,5 +11,5 @@ package Model;
  *
  */
 public enum GameState {
-	BEGINNING, RUNNING, PAUSED, WON, LOST
+	BEGINNING, RUNNING, PAUSED, WON, LOST, BLOCKED
 }

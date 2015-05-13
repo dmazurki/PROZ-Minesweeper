@@ -10,6 +10,7 @@ public class MenuEvent {
 		EXPERT_MENU_ITEM_CLICKED,
 		CUSTOM_MENU_ITEM_CLICKED,
 		HINT_MENU_ITEM_CLICKED,
+		EXIT_MENU_ITEM_CLICKED,
 	}
 	
 	final public Action action_;

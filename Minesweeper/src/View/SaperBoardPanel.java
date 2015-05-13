@@ -80,6 +80,7 @@ public class SaperBoardPanel extends JPanel {
 	{
 		fields_ = dataPack.fields_;
 		hint_ = dataPack.hint_;
+		flags_.setText(new Integer(dataPack.flags_).toString());
 		
 		
 		time_.setText((new Integer(dataPack.time_)).toString());

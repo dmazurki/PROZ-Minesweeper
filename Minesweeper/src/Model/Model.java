@@ -133,6 +133,7 @@ public class Model{
 		settings_.mines_ = mines;
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	public void setMode(Settings.Mode mode) 
 	{
 		switch (mode)
@@ -145,7 +146,12 @@ public class Model{
 	
 	public ModelDataPack getDataPack()
 	{	
-		return new ModelDataPack(time_,board_.getFields(),state_,hint_); 
+		return new ModelDataPack(time_,
+								board_.getFields(),
+								state_,
+								hint_,
+								settings_.mines_- board_.getFlaggedFields_()
+								); 
 	}
 	
 	public void newGame()
@@ -182,14 +188,24 @@ public class Model{
 		return settings_.canBeInHighScores(time, mode);
 	}
 	
-	public void addHighscore(String playerName, int time, Settings.Mode mode)
+	public void addHighscore(String playerName)
 	{
-		settings_.addHighscore(playerName, time, mode);
+		settings_.addHighscore(playerName, time_, Settings.Mode.getMode(settings_.columns_, settings_.rows_, settings_.mines_));
 	}
 	
 	public Settings.Mode getMode()
 	{
 		return Settings.Mode.getMode(settings_.columns_, settings_.rows_, settings_.mines_);
+	}
+	
+	public void block()
+	{
+		state_ = GameState.BLOCKED;
+	}
+	
+	public void saveSettings()
+	{
+		settings_.saveSettings("settings.xml");
 	}
 
 }

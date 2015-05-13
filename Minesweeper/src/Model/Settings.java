@@ -8,9 +8,19 @@ import java.io.IOException;
 
 
 
+
+
+
+
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -116,7 +126,94 @@ public class Settings {
 	 */
 	public void saveSettings(String filePath)
 	{
+		try
+		{
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+ 
+		// root elements
+		Document doc = docBuilder.newDocument();
+		Element rootElement = doc.createElement("settings");
+		doc.appendChild(rootElement);
 		
+		Element hints = doc.createElement("hints");
+		hints.setTextContent(new Boolean(hints_).toString());
+		rootElement.appendChild(hints);
+		
+		Element rows = doc.createElement("rows");
+		rows.setTextContent(new Integer(rows_).toString());
+		rootElement.appendChild(rows);
+		Element columns = doc.createElement("columns");
+		columns.setTextContent(new Integer(columns_).toString());
+		rootElement.appendChild(columns);
+		Element mines = doc.createElement("mines");
+		mines.setTextContent(new Integer(mines_).toString());
+		rootElement.appendChild(mines);
+		
+		Element xWindowPos = doc.createElement("xWindowPos");
+		xWindowPos.setTextContent(new Integer(xWindowPos_).toString());
+		rootElement.appendChild(xWindowPos);
+		Element yWindowPos = doc.createElement("yWindowPos");
+		yWindowPos.setTextContent(new Integer(yWindowPos_).toString());
+		rootElement.appendChild(yWindowPos);
+		
+		Element customRows = doc.createElement("customRows");
+		customRows.setTextContent(new Integer(customRows_).toString());
+		rootElement.appendChild(customRows);
+		Element customColumns = doc.createElement("customColumns");
+		customColumns.setTextContent(new Integer(customColumns_).toString());
+		rootElement.appendChild(customColumns);
+		Element customMines = doc.createElement("customMines");
+		customMines.setTextContent(new Integer(customMines_).toString());
+		rootElement.appendChild(customMines);
+		
+		Element beginnerHighSores = doc.createElement("beginnerHighScores");
+		for(int i = 0; i< beginnerHighScores_.length; ++i)
+		{
+			Element place = doc.createElement("place");
+			place.setAttribute("playerName", beginnerHighScores_[i].playerName_);
+			place.setAttribute("time", new Integer(beginnerHighScores_[i].time_).toString());
+			beginnerHighSores.appendChild(place);
+		}
+		rootElement.appendChild(beginnerHighSores);
+		
+		Element advancedHighSores = doc.createElement("advancedHighScores");
+		for(int i = 0; i< advancedHighScores_.length; ++i)
+		{
+			Element place = doc.createElement("place");
+			place.setAttribute("playerName", advancedHighScores_[i].playerName_);
+			place.setAttribute("time", new Integer(advancedHighScores_[i].time_).toString());
+			advancedHighSores.appendChild(place);
+		}
+		rootElement.appendChild(advancedHighSores);
+		
+		Element expertHighSores = doc.createElement("expertHighScores");
+		for(int i = 0; i< expertHighScores_.length; ++i)
+		{
+			Element place = doc.createElement("place");
+			place.setAttribute("playerName", expertHighScores_[i].playerName_);
+			place.setAttribute("time", new Integer(expertHighScores_[i].time_).toString());
+			expertHighSores.appendChild(place);
+		}
+		rootElement.appendChild(expertHighSores);
+		
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		DOMSource source = new DOMSource(doc);
+		StreamResult result = new StreamResult(new File(filePath));
+ 
+ 
+		transformer.transform(source, result);
+ 
+		
+		}
+		catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		  } 
+		catch (TransformerException tfe) {
+			tfe.printStackTrace();
+		  }
+
 	}
 	public boolean canBeInHighScores(int time, Settings.Mode mode)
 	{

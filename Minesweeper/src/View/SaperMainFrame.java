@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.MouseInfo;
@@ -25,6 +26,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -33,6 +35,7 @@ import Model.ModelDataPack;
 import Model.Settings;
 import View.Event.BoardEvent;
 import View.Event.MenuEvent;
+import View.Event.MenuEvent.Action;
 
 /**
  * 
@@ -52,7 +55,7 @@ public class SaperMainFrame extends JFrame {
 	{
 		
 		setIconImage(Assets.getImage(Model.FieldOutlook.MINE));
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setLocation(0, 0);
 		controller_ = controller;
 		thisFrame_ = this;
@@ -141,6 +144,7 @@ public class SaperMainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				settings_ = controller_.getSettings();
 				JDialog scores = new JDialog(thisFrame_,"Highscores");
 				
 				scores.setLayout(new BorderLayout());
@@ -149,15 +153,31 @@ public class SaperMainFrame extends JFrame {
 				JPanel beginnerPanel = new JPanel(new BorderLayout());
 				JPanel beginnerTable = new JPanel(new GridLayout(Settings.SCORES_NUMBER,2));
 				
-				for(int i = 0; i<Settings.SCORES_NUMBER; ++i)
+				Object [][] tbl =  new Object[5][];
+				for(int i =0;i<5; ++i)
 				{
-					beginnerTable.add( new JLabel(settings_.beginnerHighScores_[i].playerName_));
-					beginnerTable.add( new JLabel(new Integer(settings_.beginnerHighScores_[i].time_).toString()));
+					tbl[i] = new Object[2];
+					tbl[i][0] = settings_.beginnerHighScores_[i].playerName_;
+					tbl[i][1] = new Integer(settings_.beginnerHighScores_[i].time_).toString();
 				}
-				beginnerPanel.add(new JLabel("Beginner"),BorderLayout.NORTH);
-				beginnerPanel.add(beginnerTable,BorderLayout.CENTER);
-				tables.add(beginnerPanel);
+				Object [] columns = new Object[2];
+				columns[0] = new String("Player");
+				columns[1] = new String("Time");
+				JTable bT = new JTable(tbl,columns);
+				bT.setEnabled(false);
+				bT.setBackground(Color.LIGHT_GRAY);
+			
 				
+			//	for(int i = 0; i<Settings.SCORES_NUMBER; ++i)
+			//	{
+			//		beginnerTable.add( new JLabel(settings_.beginnerHighScores_[i].playerName_));
+			//		beginnerTable.add( new JLabel(new Integer(settings_.beginnerHighScores_[i].time_).toString()));
+			//	}
+				beginnerPanel.add(new JLabel("Beginner"),BorderLayout.NORTH);
+			//	beginnerPanel.add(beginnerTable,BorderLayout.CENTER);
+				beginnerPanel.add(bT,BorderLayout.CENTER);
+				tables.add(beginnerPanel);
+			
 				JPanel advancedPanel = new JPanel(new BorderLayout());
 				JPanel advancedTable = new JPanel(new GridLayout(Settings.SCORES_NUMBER,2));
 				for(int i = 0; i<Settings.SCORES_NUMBER; ++i)
@@ -211,7 +231,7 @@ public class SaperMainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				System.exit(0);
+				controller_.handleEvent(new MenuEvent(Action.EXIT_MENU_ITEM_CLICKED));
 			}
 		}
 		);
@@ -374,6 +394,8 @@ public class SaperMainFrame extends JFrame {
 	
 	/**
 	 * Mouse listener that handles player moves on game board. Then it sends proper package to controller.
+	 * When left mouse button was pressed, it tries to uncover field pointed  by mouse.
+	 * When right mouse button was pressed, it tries to flag field selected by mouse.
 	 */
 	private class BoardListener extends MouseAdapter 
 	{
@@ -397,7 +419,9 @@ public class SaperMainFrame extends JFrame {
 	}
 	
 	
-	
+	/**
+	 * This method sets the actual title of the frame depending on the game mode saved in Settings object.
+	 */
 	public void setTitle()
 	{
 		switch(Settings.Mode.getMode(settings_.columns_, settings_.rows_, settings_.mines_))
@@ -408,4 +432,6 @@ public class SaperMainFrame extends JFrame {
 			default : super.setTitle("Sapper (custom)"); break;
 		}
 	}
+	
+	
 }

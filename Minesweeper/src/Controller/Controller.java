@@ -9,9 +9,9 @@ import Model.Model;
 import Model.ModelDataPack;
 import Model.Settings;
 import View.View;
-import View.ViewDataPack;
 import View.Event.BoardEvent;
 import View.Event.MenuEvent;
+import View.Event.NewHighScoreEvent;
 
 public class Controller {
 	
@@ -55,10 +55,19 @@ public class Controller {
 		ModelDataPack pack = model_.getDataPack();
 		if(pack.gameState_ == GameState.WON)
 		{
+			
 			if(model_.canBeInHighScores(pack.time_, model_.getMode()))
 			{
 				view_.addHighScore();
 			}
+			else
+				view_.showDialog("You have won!");
+			model_.block();
+		}
+		else if(pack.gameState_ == GameState.LOST)
+		{
+			view_.showDialog("You have lost the game!");
+			model_.block();
 		}
 	}
 	
@@ -73,10 +82,16 @@ public class Controller {
 			case  EXPERT_MENU_ITEM_CLICKED : model_.setMode( 30, 16, 99); model_.newGame(); break;
 			case CUSTOM_MENU_ITEM_CLICKED : model_.setMode(e.columns_, e.rows_, e.mines_); model_.newGame(); break;
 			case HINT_MENU_ITEM_CLICKED : model_.switchHints(); break;
+			case EXIT_MENU_ITEM_CLICKED : model_.saveSettings(); System.exit(0); break;
 			
 		default:
 		}
 		updateView();	
+	}
+	
+	public void handleEvent(NewHighScoreEvent e)
+	{
+		model_.addHighscore(e.playerName_);
 	}
 	
 	public Settings getSettings()
