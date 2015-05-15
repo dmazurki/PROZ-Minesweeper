@@ -54,7 +54,7 @@ public class SaperBoardPanel extends JPanel {
         
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-
+    	
         g2d.setColor(Color.blue);
       
 		/*Drawing game board. */
@@ -63,7 +63,7 @@ public class SaperBoardPanel extends JPanel {
         		g2d.drawImage(Assets.getImage(fields_[i][j]),getBoardX()+ View.BLOCK_SIZE*j,getBoardY()+View.BLOCK_SIZE*i,null);
         	
         /*Drawing hint. */
-        if(hint_ != FieldOutlook.COVERED)
+        if(hint_ != FieldOutlook.COVERED && hint_!=FieldOutlook.FLAGGED)
         {
         	/*Converting mouse coordinates from a screen to mouse position on game board. */
         	Point p = new Point(MouseInfo.getPointerInfo().getLocation().x,MouseInfo.getPointerInfo().getLocation().y);
@@ -90,7 +90,10 @@ public class SaperBoardPanel extends JPanel {
 			emoticon_.setIcon((Icon) Assets.getIcon(2));
 		else if(dataPack.gameState_==GameState.BEGINNING)
 			emoticon_.setIcon((Icon) Assets.getIcon(0));
+		
 		repaint();
+	
+	
 	}
    
 

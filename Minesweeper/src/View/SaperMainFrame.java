@@ -33,9 +33,9 @@ import javax.swing.SwingUtilities;
 import Controller.Controller;
 import Model.ModelDataPack;
 import Model.Settings;
-import View.Event.BoardEvent;
-import View.Event.MenuEvent;
-import View.Event.MenuEvent.Action;
+import Event.BoardEvent;
+import Event.MenuEvent;
+import Event.MenuEvent.Action;
 
 /**
  * 
@@ -46,12 +46,11 @@ public class SaperMainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private SaperBoardPanel saperBoard_;
 	private Controller controller_;
-	private Settings settings_;
 	private SaperMainFrame thisFrame_;
-
+	private JRadioButtonMenuItem enableHintsMenuItem_; 
 	
 	
-	public SaperMainFrame(Controller controller)
+	public SaperMainFrame(Controller controller, int xPosition, int yPosition)
 	{
 		
 		setIconImage(Assets.getImage(Model.FieldOutlook.MINE));
@@ -59,16 +58,16 @@ public class SaperMainFrame extends JFrame {
 		setLocation(0, 0);
 		controller_ = controller;
 		thisFrame_ = this;
-		settings_ = controller.getSettings();
-		setLocation(settings_.xWindowPos_, settings_.yWindowPos_);
+		setLocation(xPosition, yPosition);
 		saperBoard_ = new SaperBoardPanel();
 		
 		setFocusable(true);
 		saperBoard_.addMouseListener(new BoardListener());
 		createMenuBar(controller_);
-		setTitle();
+	
 		
 		add(saperBoard_,BorderLayout.CENTER);
+		
 		addKeyListener(new KeyListener()
 		{
 
@@ -78,11 +77,16 @@ public class SaperMainFrame extends JFrame {
 				{
 					Point p = new Point(MouseInfo.getPointerInfo().getLocation().x,MouseInfo.getPointerInfo().getLocation().y);
 					SwingUtilities.convertPointFromScreen(p,saperBoard_);
-					controller_.handleEvent(new BoardEvent(
-							
-							((p.x -saperBoard_.getBoardX())/View.BLOCK_SIZE),
-							( p.y-saperBoard_.getBoardY())/View.BLOCK_SIZE,
-							BoardEvent.Action.H_KEY_PRESSED));
+					try {
+						controller_.blockingQueue_.put(new BoardEvent(
+								
+								((p.x -saperBoard_.getBoardX())/View.BLOCK_SIZE),
+								( p.y-saperBoard_.getBoardY())/View.BLOCK_SIZE,
+								BoardEvent.Action.H_KEY_PRESSED));
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 				
 			}
@@ -91,7 +95,12 @@ public class SaperMainFrame extends JFrame {
 			public void keyReleased(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_H)
 				{
-					controller_.handleEvent(new BoardEvent(0,0,BoardEvent.Action.H_KEY_RELASED));
+					try {
+						controller_.blockingQueue_.put(new BoardEvent(0,0,BoardEvent.Action.H_KEY_RELASED));
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 				
 			}
@@ -124,7 +133,12 @@ public class SaperMainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				controller_.handleEvent(new MenuEvent(MenuEvent.Action.PAUSE_MENU_ITEM_CLICKED));
+				try {
+					controller_.blockingQueue_.put(new MenuEvent(MenuEvent.Action.PAUSE_MENU_ITEM_CLICKED));
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				}
 			
 		});
@@ -134,7 +148,12 @@ public class SaperMainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				controller_.handleEvent(new MenuEvent(MenuEvent.Action.NEW_GAME_MENU_ITEM_CLICKED));
+				try {
+					controller_.blockingQueue_.put(new MenuEvent(MenuEvent.Action.NEW_GAME_MENU_ITEM_CLICKED));
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 			}
 			
@@ -144,56 +163,12 @@ public class SaperMainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				settings_ = controller_.getSettings();
-				JDialog scores = new JDialog(thisFrame_,"Highscores");
-				
-				scores.setLayout(new BorderLayout());
-				JPanel tables = new JPanel(new FlowLayout());
-				
-				JPanel tablePanel = new JPanel(new BorderLayout());
-				
-				Object [][] scoresMatrix =  new Object[Settings.SCORE_NUMBER][];
-			
-				for(int i =0;i<Settings.SCORE_NUMBER; ++i)
-				{
-					scoresMatrix[i] = new Object[3];
-					scoresMatrix[i][0] = settings_.highScores_[i].playerName_;
-					scoresMatrix[i][1] = settings_.highScores_[i].mode_.toString();
-					scoresMatrix[i][2] = new Integer(settings_.highScores_[i].time_).toString();
+				try {
+					controller_.blockingQueue_.put(new MenuEvent(MenuEvent.Action.HIGHSCORES_MENU_ITEM_CLICKED));
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-				
-				Object [] columns = new Object[3];
-				columns[0] = new String("Player");
-				columns[1] = new String("Mode");
-				columns[2] = new String("Time");
-				
-				JTable scoreTable = new JTable(scoresMatrix,columns);
-				scoreTable.setEnabled(false);
-				scoreTable.setBackground(Color.LIGHT_GRAY);
-				
-				tablePanel.add(scoreTable.getTableHeader(),BorderLayout.NORTH);
-				tablePanel.add(scoreTable,BorderLayout.CENTER);
-				
-				tables.add(tablePanel);
-			
-				JButton okButton = new JButton("OK");
-				okButton.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						scores.dispose();
-						
-					}
-				});
-				JPanel buttonPanel = new JPanel(new FlowLayout());
-				buttonPanel.add(okButton);
-				scores.add(buttonPanel,BorderLayout.SOUTH);
-				scores.add(tables,BorderLayout.CENTER);
-				
-				scores.pack();
-				scores.setResizable(false);
-				scores.setLocationRelativeTo(thisFrame_);
-				scores.setVisible(true);
 				
 			}
 			
@@ -205,7 +180,12 @@ public class SaperMainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				controller_.handleEvent(new MenuEvent(Action.EXIT_MENU_ITEM_CLICKED));
+				try {
+					controller_.blockingQueue_.put(new MenuEvent(Action.EXIT_MENU_ITEM_CLICKED));
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 		);
@@ -223,10 +203,13 @@ public class SaperMainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				controller_.handleEvent(new MenuEvent(MenuEvent.Action.BEGINNER_MENU_ITEM_CLICKED));
-				settings_ = controller_.getSettings();
-				setTitle();
-			
+				try {
+					controller_.blockingQueue_.put(new MenuEvent(MenuEvent.Action.BEGINNER_MENU_ITEM_CLICKED));
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+					
 			}
 	    }
 	    );
@@ -236,9 +219,13 @@ public class SaperMainFrame extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					controller_.handleEvent(new MenuEvent(MenuEvent.Action.ADVANCED_MENU_ITEM_CLICKED));
-					settings_ = controller_.getSettings();
-					setTitle();
+					try {
+						controller_.blockingQueue_.put(new MenuEvent(MenuEvent.Action.ADVANCED_MENU_ITEM_CLICKED));
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				
 				}
 		    }
@@ -249,9 +236,13 @@ public class SaperMainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				controller_.handleEvent(new MenuEvent(MenuEvent.Action.EXPERT_MENU_ITEM_CLICKED));
-				settings_ = controller_.getSettings();
-				setTitle();
+				try {
+					controller_.blockingQueue_.put(new MenuEvent(MenuEvent.Action.EXPERT_MENU_ITEM_CLICKED));
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		
 			}
 	    }
 	    );
@@ -261,85 +252,37 @@ public class SaperMainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				/* Creating dialog window for choosing custom board settings. */ 
-				JDialog options = new JDialog(thisFrame_,"Custom");
-				options.setLayout(new BorderLayout());
-				
-				JPanel input = new JPanel();
-				input.setLayout(new GridLayout(3,2));
-				
-				JLabel columnsL = new JLabel("Columns:");
-				JTextField columnsF = new JTextField((new Integer(settings_.customColumns_)).toString());
-				JLabel rowsL = new JLabel("Rows:");
-				JTextField rowsF = new JTextField((new Integer(settings_.customRows_)).toString());
-				JLabel minesL = new JLabel("Mines:");
-				JTextField minesF = new JTextField((new Integer(settings_.customMines_)).toString());
-				
-				input.add(columnsL);input.add(columnsF);
-				input.add(rowsL);	input.add(rowsF);
-				input.add(minesL);	input.add(minesF);
-				
-				JPanel buttons = new JPanel(new FlowLayout());
-				
-				JButton apply = new JButton("Ok");
-				apply.addActionListener(new ActionListener(){
-
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						try{
-							
-						controller_.handleEvent(new MenuEvent(
-								MenuEvent.Action.CUSTOM_MENU_ITEM_CLICKED
-								,Integer.parseInt(columnsF.getText())
-								,Integer.parseInt(rowsF.getText())
-								,Integer.parseInt(minesF.getText())));
-						
-						settings_ = controller_.getSettings();
-						setTitle();
-						}
-						catch(InvalidParameterException e)
-						{
-							JOptionPane.showMessageDialog(thisFrame_, "Invalid parameters.");
-						}
-						
-						options.dispose();
-					}
-					
-				});
-				JButton cancel = new JButton("Cancel");
-				cancel.addActionListener(new ActionListener(){
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						options.dispose();
-						
-					}
-					
-				});
-				buttons.add(apply); buttons.add(cancel);
-				
-				options.getContentPane().add(input,BorderLayout.CENTER);
-				options.getContentPane().add(buttons,BorderLayout.SOUTH);
-		
-				options.pack();
-				options.setResizable(false);
-				options.setLocationRelativeTo(thisFrame_);
-				options.setVisible(true);
+				try {
+					controller_.blockingQueue_.put(new MenuEvent(MenuEvent.Action.CUSTOM_MENU_ITEM_CLICKED));
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
 			}
 	    }
 	    );
 	    
       
         
-	    JRadioButtonMenuItem enableHintsMenuItem = new JRadioButtonMenuItem("Enable hints");
-		enableHintsMenuItem.setSelected(settings_.hints_ );
-		enableHintsMenuItem.addActionListener(new ActionListener(){
-
+	    enableHintsMenuItem_ = new JRadioButtonMenuItem("Enable hints");
+		
+		enableHintsMenuItem_.addActionListener(new ActionListener(){
+			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				controller_.handleEvent(new MenuEvent(MenuEvent.Action.HINT_MENU_ITEM_CLICKED));
-				settings_ = controller_.getSettings();
-				((JRadioButtonMenuItem)arg0.getSource()).setSelected(settings_.hints_ == true);
-		
+				
+					
+					
+				try {
+					
+					controller_.blockingQueue_.put(new MenuEvent(MenuEvent.Action.HINT_MENU_ITEM_CLICKED));
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+					
 			}
 			
 		});
@@ -348,7 +291,7 @@ public class SaperMainFrame extends JFrame {
 		optionsMenu.add(expertOptionMenuItem);
 		optionsMenu.add(customOptionMenuItem);
 		optionsMenu.addSeparator();
-		optionsMenu.add(enableHintsMenuItem);
+		optionsMenu.add(enableHintsMenuItem_);
 	
 		
 		JMenu helpMenu = new JMenu("Help");
@@ -375,37 +318,40 @@ public class SaperMainFrame extends JFrame {
 	{
 		@Override
 		public void mousePressed(MouseEvent e) {
+			try {
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				controller_.handleEvent(new BoardEvent(
+				controller_.blockingQueue_.put(new BoardEvent(
 					((e.getX()-saperBoard_.getBoardX())/View.BLOCK_SIZE),
 					(e.getY()-saperBoard_.getBoardY())/View.BLOCK_SIZE,
 					BoardEvent.Action.LEFT_MOUSE_BUTTON_PRESSED));
 			}
 			else if (e.getButton() == MouseEvent.BUTTON3)
 			{
-				controller_.handleEvent(new BoardEvent(
+				controller_.blockingQueue_.put(new BoardEvent(
 					((e.getX()-saperBoard_.getBoardX())/View.BLOCK_SIZE),
 					(e.getY()-saperBoard_.getBoardY())/View.BLOCK_SIZE,
 					BoardEvent.Action.RIGHT_MOUSE_BUTTON_PRESSED));
 			}
 		}
+			catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 	}
-	
+	}
 	
 	/**
 	 * This method sets the actual title of the frame depending on the game mode saved in Settings object.
 	 */
-	public void setTitle()
+	public void setTitle(String title)
 	{
-		switch(Settings.Mode.getMode(settings_.columns_, settings_.rows_, settings_.mines_))
-		{
-			case BEGINNER : super.setTitle("Sapper (beginner)"); break;
-			case ADVANCED: super.setTitle("Sapper (advanced)"); break;
-			case EXPERT : super.setTitle("Sapper (expert)"); break;
-			default : super.setTitle("Sapper (custom)"); break;
-		}
-	}
+		super.setTitle(title);
 	
+	}
+	public void setHintsButtonState(boolean state)
+	{
+		enableHintsMenuItem_.setSelected(state);
+	}
 	
 }

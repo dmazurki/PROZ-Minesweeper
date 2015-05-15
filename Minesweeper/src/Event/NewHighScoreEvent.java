@@ -1,6 +1,6 @@
-package View.Event;
+package Event;
 
-public class NewHighScoreEvent {
+public class NewHighScoreEvent extends Event{
 	final public String playerName_;
 	public  NewHighScoreEvent(String s)
 	{

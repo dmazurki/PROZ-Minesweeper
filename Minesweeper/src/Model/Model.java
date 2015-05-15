@@ -4,13 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.InvalidParameterException;
 
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import Controller.Controller;
+import Event.TimeEvent;
+import Model.Settings.Score;
 
 
 
 public class Model{
+	
+	final static String SETTINGS_FILE_NAME = "settings.xml";
 	
 	private Board board_;
 	private GameState state_;
@@ -24,25 +29,39 @@ public class Model{
 	public Model()
 	{
 		
-		settings_ = new Settings("settings.xml");
+		settings_ = new Settings(SETTINGS_FILE_NAME);
 		board_ = new Board(settings_.columns_,settings_.rows_,settings_.mines_);
 		state_ = GameState.BEGINNING;
 		time_ = 0;
 		hint_ = FieldOutlook.COVERED;
+		
 		timer_ = new Timer(1000, new ActionListener()
 		{
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-					time_++;
-					if(controller_!=null)
-						controller_.updateView();
-				}
+				SwingUtilities.invokeLater(new Runnable()
+				{		
+					@Override
+					public void run() {
+						time_++;
+						if(controller_!=null)
+						{
+							try {
+								controller_.blockingQueue_.put(new TimeEvent());
+								} 
+							catch (InterruptedException e) 
+								{
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								}
+						}
+					}
 			
+				});
+			}
 		});
-		
 	}
-	
 	public void  getController(Controller c)
 	{
 		controller_ = c;
@@ -50,6 +69,7 @@ public class Model{
 	
 	public void switchHints()
 	{
+			
 		if(settings_.hints_==false)
 			settings_.hints_ = true;
 		else if(state_ != GameState.RUNNING)
@@ -93,12 +113,19 @@ public class Model{
 	{
 		
 		if(settings_.hints_ == true)
+		{
 			hint_ = board_.getOutlook(x, y);
+		}
 	}
 	
 	public void cancelHint()
 	{
-		hint_ = FieldOutlook.COVERED;
+		if(settings_.hints_ == true)
+		{
+			hint_ = FieldOutlook.FLAGGED;
+		}
+		else
+			hint_ = FieldOutlook.COVERED;
 	}
 	
 	/**
@@ -158,6 +185,7 @@ public class Model{
 	{
 		board_ = new Board(settings_.columns_,settings_.rows_,settings_.mines_);
 		state_ = GameState.BEGINNING;
+		hint_ = FieldOutlook.COVERED;
 		time_ = 0;
 		timer_.restart();
 		timer_.stop();
@@ -178,10 +206,15 @@ public class Model{
 		return board_.getRevealedMines_() != 0;
 	}
 	
-	public Settings getSettings()
+	public Score[] getHighScores()
 	{
-		return settings_.clone();
+		return settings_.getHighScores();
 	}
+	public int getColumns() {return settings_.columns_;}
+	public int getRows() {return settings_.rows_;}
+	public int getMines() {return settings_.mines_;}
+	public boolean hintsEnabled() {return settings_.hints_;}
+
 	
 	public boolean canBeInHighScores(int time, Settings.Mode mode)
 	{
@@ -205,7 +238,7 @@ public class Model{
 	
 	public void saveSettings()
 	{
-		settings_.saveSettings("settings.xml");
+		settings_.saveSettings(SETTINGS_FILE_NAME);
 	}
 
 }

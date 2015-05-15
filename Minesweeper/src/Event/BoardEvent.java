@@ -1,6 +1,6 @@
-package View.Event;
+package Event;
 
-public class BoardEvent {
+public class BoardEvent extends Event {
 	
 		final public int row_;
 		final public int column_;
