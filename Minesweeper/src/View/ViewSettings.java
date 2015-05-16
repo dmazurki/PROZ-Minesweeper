@@ -63,7 +63,7 @@ public class ViewSettings {
 			customColumns_ = parseInt( rootElement.getElementsByTagName("customColumns").item(0));
 			customMines_ = parseInt( rootElement.getElementsByTagName("customMines").item(0));
 		
-			lastGivenPlayerName_ = rootElement.getElementsByTagName("lastGivenPlayerName").item(0).toString();
+			lastGivenPlayerName_ = rootElement.getElementsByTagName("lastGivenPlayerName").item(0).getTextContent();
 
 		} 
 		catch (ParserConfigurationException e) 

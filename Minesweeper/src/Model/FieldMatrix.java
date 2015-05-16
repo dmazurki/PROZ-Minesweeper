@@ -145,25 +145,5 @@ public class FieldMatrix {
 		}
 		
 	}
-	
-	void drawInConsole()
-	{
-		for(int i = 0; i<height_; ++i)
-		{
-			for(int j = 0; j<width_;++j)
-			{
-				Field temp = getField(j,i);
-				if(!temp.isRevealed())
-					System.out.print("X ");
-				else if(temp.isMine() == true)
-					System.out.print("M ");
-				else
-					System.out.print(adjacentMines(j,i)+" ");
-			}
-			System.out.println();
-		}
-	}
-	
-	
 
 }

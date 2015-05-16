@@ -1,16 +1,18 @@
 package View;
 
+import java.awt.Font;
 import java.awt.Image;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import Model.FieldOutlook;
-import Model.GameState;
 
 public class Assets {
 	private static Image[] images_;
 	private static Icon[] icons_;
+	
+	
 	
 	public static void load()
 	{
@@ -33,6 +35,8 @@ public class Assets {
 		icons_[1] = new ImageIcon("Assets/faceSad.png");
 		icons_[2] = new ImageIcon("Assets/faceCool.png");
 		icons_[3] = new ImageIcon("Assets/facePirate.png");
+		
+		
 	
 	}
 	

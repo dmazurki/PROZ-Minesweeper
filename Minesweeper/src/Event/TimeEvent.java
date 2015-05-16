@@ -1,5 +1,5 @@
 package Event;
 
-public class TimeEvent extends Event{
-
+public class TimeEvent extends Event
+{
 }

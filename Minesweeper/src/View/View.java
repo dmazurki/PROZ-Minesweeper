@@ -47,7 +47,7 @@ public class View {
 	 * It takes initial data pack and initializes View, creating first window.
 	 * @param dataPack
 	 */
-	public void getController(Controller c)
+	public void setController(Controller c)
 	{
 		mainFrame_ = new SaperMainFrame(c,settings_.xWindowPosition_,settings_.yWindowPosition_);
 		controller_ = c;

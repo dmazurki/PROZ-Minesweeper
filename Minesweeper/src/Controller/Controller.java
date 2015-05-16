@@ -40,8 +40,8 @@ public class Controller {
 		model_ = model;
 		view_ = view;
 		setStrategies();
-		model_.getController(this);
-		view_.getController(this);
+		model_.setController(this);
+		view_.setController(this);
 		updateView();
 		run();
 		

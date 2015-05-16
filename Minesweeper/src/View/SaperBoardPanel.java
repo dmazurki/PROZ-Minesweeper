@@ -6,10 +6,15 @@ import Model.FieldOutlook;
 import Model.GameState;
 import Model.ModelDataPack;
 
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -34,9 +39,18 @@ public class SaperBoardPanel extends JPanel {
 		fields_ = new FieldOutlook[1][1];
 		fields_[0][0] = FieldOutlook.COVERED;
 		hint_ = FieldOutlook.COVERED;
-		add(new JLabel("Flags:"));
+		
+		Font font = new Font("Verdana",Font.BOLD,13);
+		
+		JLabel flagLabel = new JLabel("FLAGS:");
+		flagLabel.setFont(font);
+		add(flagLabel);
+		
 		flags_ = new JLabel("0");
+		flags_.setFont(font);
 		add(flags_);
+		
+		
 		
 		emoticon_ = new JButton();
 		emoticon_.setIcon( new ImageIcon("Assets/faceSmiling.png"));
@@ -44,8 +58,11 @@ public class SaperBoardPanel extends JPanel {
 		emoticon_.setContentAreaFilled(false);
 		add(emoticon_);
 		
-		add(new JLabel("Time:"));
-		time_ = new JLabel("0");
+		JLabel timeLabel = new JLabel("TIME:");
+		timeLabel.setFont(font);
+		add(timeLabel);
+		time_ = new JLabel("0");  
+		time_.setFont(font);
 		add(time_);
 	}
 
@@ -55,9 +72,7 @@ public class SaperBoardPanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
     	
-        g2d.setColor(Color.blue);
-      
-		/*Drawing game board. */
+      /*Drawing game board. */
         for(int i = 0; i<fields_.length;++i)
         	for(int j = 0; j<fields_[i].length; ++j)
         		g2d.drawImage(Assets.getImage(fields_[i][j]),getBoardX()+ View.BLOCK_SIZE*j,getBoardY()+View.BLOCK_SIZE*i,null);
@@ -70,9 +85,7 @@ public class SaperBoardPanel extends JPanel {
         	SwingUtilities.convertPointFromScreen(p,this);
         	g2d.drawImage(Assets.getImage(hint_), p.x, p.y, null);
         }
-       
-      
-     }
+    }
 	
 	void update(ModelDataPack dataPack)
 	{

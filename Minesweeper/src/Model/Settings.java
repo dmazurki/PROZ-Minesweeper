@@ -2,18 +2,7 @@ package Model;
 
 import java.io.File;
 
-
-
 import java.io.IOException;
-
-
-
-
-
-
-
-
-import java.util.LinkedList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,7 +24,7 @@ import org.xml.sax.SAXException;
  */
 public class Settings {
 	
-	public final static int SCORE_NUMBER = 10;
+	public final static int SCORE_NUMBER = 10; //Number of best scores in settings object. 
 	public class Score
 	{
 		final public String playerName_;
@@ -60,10 +49,6 @@ public class Settings {
 	public int mines_;
 	public Score[] highScores_;
 	
-
-	
-	
-	
 	/**
 	 * Constructor that loads game settings from XML file.  
 	 * @param filePath - path of the XML file with saved settings.
@@ -71,39 +56,38 @@ public class Settings {
 	public  Settings(String filePath) 
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		try {
+		try 
+		{
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document =  builder.parse(new File(filePath));
 			Node rootNode = document.getElementsByTagName("settings").item(0);
 			Element rootElement = (Element) rootNode;
 			
-			
 			hints_ = parseBool(rootElement.getElementsByTagName("hints").item(0) );
 			
-			/*Reading the amount of rows in game board.*/
 			rows_ = parseInt( rootElement.getElementsByTagName("rows").item(0));
 			columns_ = parseInt( rootElement.getElementsByTagName("columns").item(0));
 			mines_ = parseInt( rootElement.getElementsByTagName("mines").item(0));
 		
-			
 			highScores_ = new Score[SCORE_NUMBER];
-			
 			Element cursor = (Element) rootElement.getElementsByTagName("highScores").item(0);
 			for(int i = 0; i<SCORE_NUMBER; ++i)
+			{
 				highScores_[i] = parseScore(cursor.getElementsByTagName("place").item(i));
-			
-			
-		
-			
-		} catch (ParserConfigurationException e) {
+			}
+		} 
+		catch (ParserConfigurationException e) 
+		{
 			e.printStackTrace();
-		} catch (SAXException e) {
+		} 
+		catch (SAXException e) 
+		{
 			e.printStackTrace();
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 	/**
@@ -156,20 +140,18 @@ public class Settings {
  
  
 		transformer.transform(source, result);
- 
-		
 		}
-		catch (ParserConfigurationException pce) {
+		catch (ParserConfigurationException pce) 
+		{
 			pce.printStackTrace();
-		  } 
-		catch (TransformerException tfe) {
+		} 
+		catch (TransformerException tfe) 
+		{
 			tfe.printStackTrace();
-		  }
-
+		}
 	}
 	public boolean canBeInHighScores(int time, Settings.Mode mode)
 	{
-	
 		for(int i = 0; i<SCORE_NUMBER; ++i)
 		{
 			if(highScores_[i].time_>time && !highScores_[i].mode_.biggerThan(mode))
@@ -211,6 +193,7 @@ public class Settings {
 	{
 		return Integer.parseInt(( (Element)n).getTextContent() );
 	}
+	
 	private Boolean parseBool(Node n)
 	{
 		return Boolean.valueOf((n).getTextContent() );
@@ -219,7 +202,9 @@ public class Settings {
 	private Score parseScore(Node n)
 	{
 		Element element = (Element) n;
-		return new Score(element.getAttribute("playerName"), Mode.parseMode(element.getAttribute("mode")), Integer.parseInt(element.getAttribute("time")));
+		return new Score(element.getAttribute("playerName"),
+						Mode.parseMode(element.getAttribute("mode")),
+						Integer.parseInt(element.getAttribute("time")));
 	}
 	
 	
@@ -229,7 +214,6 @@ public class Settings {
 		Score[] retVal = new Score[SCORE_NUMBER];
 		for(int i = 0; i<SCORE_NUMBER; i++)
 			retVal[i] = new Score(highScores_[i].playerName_,highScores_[i].mode_,highScores_[i].time_);
-		
 		return retVal;
 	}
 	
