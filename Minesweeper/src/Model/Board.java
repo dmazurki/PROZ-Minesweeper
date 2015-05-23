@@ -8,21 +8,26 @@ package Model;
  */
 public class Board {
 	
-
+	/**How many mines there are on the game board.*/
 	private int mines_;
+	/**True if first field is still not uncovered, false otherwise.*/
 	private boolean beginning_;
+	/**How many fields did the player reveal.*/
 	private int revealedFields_;
+	/**How many mines did the player reveal. (Obviously maximum value is 1).*/
 	private int revealedMines_;
+	/**How many fields did the player flag.*/ 
 	private int flaggedFields_;
+	/**How many mines did the player flag.*/
 	private int flaggedMines_;
-	
-	FieldMatrix fields_;
+	/**Matrix of the fields on the game board.*/
+	private FieldMatrix fields_;
 	
 	/**
-	 * 
-	 * @param width - how many fields horizontally
-	 * @param height - how many fields vertically
-	 * @param mines - how many fields should be on the board
+	 * Creates new game board.
+	 * @param width 	 how many fields horizontally.
+	 * @param height 	 how many fields vertically.
+	 * @param mines  	 how many fields should be on the board.
 	 */
 	public Board(int width, int height, int mines)
 	{
@@ -32,11 +37,7 @@ public class Board {
 		revealedFields_ = revealedMines_ = flaggedFields_ = flaggedMines_ = 0;
 	}
 	
-	public void resetBoard()
-	{
-		
-	}
-	
+	/** @return Two dimensional table of states of all fields on the board.*/
 	public FieldOutlook[][] getFields()
 	{
 		
@@ -55,17 +56,23 @@ public class Board {
 		return fields;
 	}
 	
-	public boolean endGame(){ 
-		if ( revealedMines_!=0)
-			return true;
-		return false;
-	}
-	
+	/**Get field from game board.
+	 * @param x  column of the field.
+	 * @param y  row of the field.
+	 * @return Field that is on given coordinates.
+	 */
 	public Field getField(int x, int y)
 	{
 		return fields_.getField(x, y);
 	}
 	
+	/**
+	 * Reveal field on given coordinates. If it is first field being revealed the mines are put on the
+	 * game board randomly after revealig that fields. It provides certainty that player will not loose
+	 * with his first move.
+	 * @param x culumn with field we want to reveal.
+	 * @param y row with field we want to reveal.
+	 */
 	public void revealField(int x, int y)
 	{
 		if(fields_.correctCoordinates(x, y)==false)
@@ -121,6 +128,11 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Put a flag on field on given coordinates. It affects only visual representation of the field.
+	 * @param x culumn with field we want to flag.
+	 * @param y row with field we want to flag.
+	 */
 	public void flagField(int x, int y)
 	{
 		Field field = fields_.getField(x, y);
@@ -132,6 +144,11 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Remove flag from field on given coordinates. It affects only visual representation of the field.
+	 * @param x culumn with field we want to unflag.
+	 * @param y row with field we want to unflag.
+	 */
 	public void unflagField(int x, int y)
 	{
 		Field field = fields_.getField(x, y);
@@ -144,10 +161,10 @@ public class Board {
 	}
 	
 	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
+	 * Find out how to represent field visually.
+	 * @param x culumn with field.
+	 * @param y row with field.
+	 * @return Outlook of the fields at given coordinates.
 	 */
 	public FieldOutlook getOutlook(int x, int y)
 	{
@@ -168,9 +185,7 @@ public class Board {
 		}
 	}
 	
-	/**
-	 * 
-	 */
+	/**Reveal all fields on game board.*/
 	void revealAll()
 	{
 		for(int x= 0; x<fields_.getWidth();++x)
@@ -178,8 +193,27 @@ public class Board {
 				revealField(x,y);
 	}
 	
-	public int getRevealedFields_() {return revealedFields_; }
-	public int getRevealedMines_() {return revealedMines_; }
-	public int getFlaggedFields_() {return flaggedFields_;}
-	public int getFlaggedMines_() {return flaggedMines_;}
+	/**@return How many fields did player reveal.*/
+	public int getRevealedFields_() 
+	{
+		return revealedFields_;
+	}
+	
+	/**@return How many mines did player reveal.*/
+	public int getRevealedMines_()
+	{
+		return revealedMines_; 
+	}
+	
+	/**@return How many fields did player flag.*/
+	public int getFlaggedFields_()
+	{
+		return flaggedFields_;
+	}
+	
+	/**@return How many mines did player flag.*/
+	public int getFlaggedMines_()
+	{
+		return flaggedMines_;
+	}
 }

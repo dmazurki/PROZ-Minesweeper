@@ -1,21 +1,26 @@
 package View;
 
-import java.awt.Font;
 import java.awt.Image;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import Model.FieldOutlook;
-
+/**
+ * Class that holds all graphics for the game.
+ * @author Damian
+ */
 public class Assets {
 	private static Image[] images_;
 	private static Icon[] icons_;
 	
 	
-	
+	/**
+	 * Load images from disc.
+	 */
 	public static void load()
 	{
+		//Fields on the board.
 		images_ = new Image[16];
 		images_[0] = new ImageIcon("Assets/covered.png").getImage();
 		images_[1] = new ImageIcon("Assets/mine.png").getImage();
@@ -30,44 +35,55 @@ public class Assets {
 		images_[10] = new ImageIcon("Assets/sevenAdjacent.png").getImage();
 		images_[11] = new ImageIcon("Assets/eightAdjacent.png").getImage();
 		
+		//Emoticons.
 		icons_ = new Icon[4];
 		icons_[0] = new ImageIcon("Assets/faceSmiling.png");
 		icons_[1] = new ImageIcon("Assets/faceSad.png");
 		icons_[2] = new ImageIcon("Assets/faceCool.png");
 		icons_[3] = new ImageIcon("Assets/facePirate.png");
-		
-		
-	
 	}
 	
+	/**
+	 * Get image of given number.
+	 * @param number
+	 * @return Image
+	 */
 	public static Image getImage(int nr)
 	{
 		return images_[nr];
 	}
 	
+	/**
+	 * Get icon of given number.
+	 * @param number
+	 * @return Icon
+	 */
 	public static Icon getIcon(int nr)
 	{
 		return icons_[nr];
 	}
 	
+	/**
+     * Get image corresponding to given FieldOutlook.
+	 * @param field
+	 * @return Image.
+	 */
 	public static Image getImage(FieldOutlook field)
 	{
 		switch(field)
 		{
-		
-		case MINE : return images_[1]; 
-		case FLAGGED : return images_[2]; 
-		case ZERO_ADJACENT : return images_[3]; 
-		case ONE_ADJACENT : return images_[4]; 
-		case TWO_ADJACENT : return images_[5]; 
-		case THREE_ADJACENT : return images_[6]; 
-		case FOUR_ADJACENT : return images_[7]; 
-		case FIVE_ADJACENT : return images_[8]; 
-		case SIX_ADJACENT : return images_[9]; 
-		case SEVEN_ADJACENT : return images_[10]; 
-		case EIGHT_ADJACENT : return images_[11]; 
-		default:	return images_[0]; 
-		
+			case MINE : return images_[1]; 
+			case FLAGGED : return images_[2]; 
+			case ZERO_ADJACENT : return images_[3]; 
+			case ONE_ADJACENT : return images_[4]; 
+			case TWO_ADJACENT : return images_[5]; 
+			case THREE_ADJACENT : return images_[6]; 
+			case FOUR_ADJACENT : return images_[7]; 
+			case FIVE_ADJACENT : return images_[8]; 
+			case SIX_ADJACENT : return images_[9]; 
+			case SEVEN_ADJACENT : return images_[10]; 
+			case EIGHT_ADJACENT : return images_[11]; 
+			default	:	return images_[0]; 
 		}
 	}
 	

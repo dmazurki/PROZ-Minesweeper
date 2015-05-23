@@ -1,9 +1,6 @@
 package View;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -12,33 +9,25 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.security.InvalidParameterException;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import Controller.Controller;
 import Model.ModelDataPack;
-import Model.Settings;
 import Event.BoardEvent;
 import Event.MenuEvent;
 import Event.MenuEvent.Action;
 
 /**
- * 
+ * Main frame of the game.
  * @author Damian
  */
 public class SaperMainFrame extends JFrame {
@@ -50,9 +39,14 @@ public class SaperMainFrame extends JFrame {
 	private JRadioButtonMenuItem enableHintsMenuItem_; 
 	
 	
+	/**
+	 * 
+	 * @param controller - object that controls View.
+	 * @param xPosition  - xPosition of window.
+	 * @param yPosition  - yPosition of window.
+	 */
 	public SaperMainFrame(Controller controller, int xPosition, int yPosition)
 	{
-		
 		setIconImage(Assets.getImage(Model.FieldOutlook.MINE));
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setLocation(0, 0);
@@ -65,9 +59,12 @@ public class SaperMainFrame extends JFrame {
 		saperBoard_.addMouseListener(new BoardListener());
 		createMenuBar(controller_);
 	
-		
 		add(saperBoard_,BorderLayout.CENTER);
 		
+		/**
+		 * Main frame has its own key listener that checks, if the H key on the keyboard was pressed.
+		 * If so, it puts proper event in Blocking Queue. H - key is responsible for showing hint. 
+		 */
 		addKeyListener(new KeyListener()
 		{
 
@@ -125,7 +122,6 @@ public class SaperMainFrame extends JFrame {
 	{
 		JMenuBar menuBar = new JMenuBar();
 	
-		
 		JMenu gameMenu = new JMenu("Game");
 		
 		JMenuItem pauseMenuItem = new JMenuItem("Pause");
@@ -141,11 +137,11 @@ public class SaperMainFrame extends JFrame {
 				}
 				}
 			
-		});
+			});
+		
 		JMenuItem newGameMenuItem = new JMenuItem("New game");
 		newGameMenuItem.addActionListener(new ActionListener()
 		{
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -154,9 +150,7 @@ public class SaperMainFrame extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 			}
-			
 		});
 		JMenuItem highScoresMenuItem = new JMenuItem("Highscores");
 		highScoresMenuItem.addActionListener(new ActionListener(){
@@ -296,6 +290,25 @@ public class SaperMainFrame extends JFrame {
 		
 		JMenu helpMenu = new JMenu("Help");
 		JMenuItem gameRulesMenuItem = new JMenuItem("Rules");
+		gameRulesMenuItem.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JDialog dialog = new JDialog(thisFrame_,"Game Rules");
+			    dialog.add(new JLabel("<html>RULES:"
+			    		+ "<br>The goal of the game is to reveal all the fields that are not mines</br>"
+			    		+ "<br>or flag all thr fields thar are mines. </br>"
+			    		+ "<br>HINTS:</br>"
+			    		+ "<br>You can turn on the hints in the options menuu then if you press H button</br>"
+			    		+ "<br>you will see what is the field on the position that you are holding our mouse.</br>"
+			    		+ "<br>but when you play the game with hints on, you will not be able to be in highscores.</br></html>"));
+			    dialog.setVisible(true);
+			    dialog.pack();
+			    dialog.setLocationRelativeTo(thisFrame_);
+				
+			}
+			
+		});
 		JMenuItem aboutSaperMenuItem = new JMenuItem("About Saper");
 		helpMenu.add(gameRulesMenuItem);
 		helpMenu.add(aboutSaperMenuItem);
@@ -335,7 +348,6 @@ public class SaperMainFrame extends JFrame {
 			}
 		}
 			catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 	}
@@ -349,6 +361,12 @@ public class SaperMainFrame extends JFrame {
 		super.setTitle(title);
 	
 	}
+	
+	/**
+	 * Method responsible for setting the state of button "enable Hints". If hints are enabled, this menu 
+	 * item should be checked.
+	 * @param state - if true, button is checked.
+	 */
 	public void setHintsButtonState(boolean state)
 	{
 		enableHintsMenuItem_.setSelected(state);

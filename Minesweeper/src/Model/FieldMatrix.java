@@ -6,20 +6,23 @@ import java.util.Random;
  * This class makes operating on field Matrix easier.
  * It holds two dimenstional array of fields.
  * @author Damian Mazurkiewicz
- *
  */
 public class FieldMatrix {
-	
+	/**All fields in the matrix.*/
 	ArrayList<Field> fields_;
-	int width_, height_;
+	/**How many columns the matrix has.*/
+	int width_;
+	/**How many rows the matrix has.*/
+	int height_;
+	/**Generator of pseudo-random numbers used to throw mines randomly on the matrix fields.*/
 	Random generator_;
 	
 	
 	/**
 	 * Constructor that creates Field matrix and fills it with fields, initially
 	 * all fields are covered and not mines.
-	 * @param width - width of field matrix (how many fields horizontally)
-	 * @param height - height of field matrix (how many fields vertically)
+	 * @param width  width of field matrix (how many fields horizontally)
+	 * @param height  height of field matrix (how many fields vertically)
 	 */
 	public FieldMatrix(int width,int height)
 	{
@@ -32,14 +35,24 @@ public class FieldMatrix {
 			fields_.add(new Field());
 	}
 	
-	int getWidth() {return width_;}
-	int getHeight(){return height_;}
+	/**@return Number of columns in the matrix.*/
+	int getWidth() 
+	{
+		return width_;
+	}
+	
+	/** @return Number of rows in the matrix. */
+	int getHeight()
+	{
+		return height_;
+	}
 	
 	/**
 	 * Function that allows accessing fields in the matrix.
-	 * @param x - number of column
-	 * @param y - number of row
+	 * @param x  number of columns.
+	 * @param y  number of rowr.
 	 * @return Field at given coordinates.
+	 * @throws IllegalArgumentException if requested fields is out of bounds of the matrix.
 	 */
 	public Field getField(int x, int y) throws IllegalArgumentException
 	{
@@ -50,8 +63,8 @@ public class FieldMatrix {
 	
 	/**
 	 * Checks if field with coordinates x, y exists on the field matrix.
-	 * @param x 
-	 * @param y
+	 * @param x column number.
+	 * @param y row number.
 	 * @return true - if coordinates are correct, false - otherwise.
 	 */
 	public boolean correctCoordinates(int x, int y)
@@ -62,9 +75,10 @@ public class FieldMatrix {
 	}
 	/**
 	 * This method returns the amount of fields adjacent to field at given coordinates, which contain a mine.
-	 * @param x
-	 * @param y
+	 * @param x column number.
+	 * @param y row number.
 	 * @return Number of adjacent fields with mines. 
+	 * @throws IllegalArgumentException if requested fields is out of bounds of the matrix.
 	 */
 	public int adjacentMines(int x, int y) throws IllegalArgumentException
 	{
@@ -94,9 +108,10 @@ public class FieldMatrix {
 	
 	/**
 	 * This method randomly puts given number of mines in covered fields.
-	 * @param minesQuantity
+	 * @param minesQuantity How many mines has to be in the matrix.
+	 * @throws IllegalArgumentException if requested fields is out of bounds of the matrix.
 	 */
-	void throwMines(double minesQuantity)
+	void throwMines(double minesQuantity) throws IllegalArgumentException
 	{
 		double coveredPlacesCount  = 0;
 		double mineProbability;
@@ -109,7 +124,11 @@ public class FieldMatrix {
 				++coveredPlacesCount;
 		}
 		
+		if(coveredPlacesCount<minesQuantity)
+			throw new IllegalArgumentException("It is impossible to throw that number of mines on this Matrix.");
+		
 		mineProbability = minesQuantity/coveredPlacesCount;
+	
 		
 		for(Field i : fields_)
 		{

@@ -68,15 +68,23 @@ public class ViewSettings {
 		} 
 		catch (ParserConfigurationException e) 
 		{
-			e.printStackTrace();
+			setDefaultSettings();
 		} 
 		catch (SAXException e) 
 		{
-			e.printStackTrace();
+			setDefaultSettings();
 		} 
-		catch (IOException e)
+		catch (IOException e) 
 		{
-			e.printStackTrace();
+			setDefaultSettings();
+		}
+		catch (NumberFormatException e)
+		{
+			setDefaultSettings();
+		}
+		catch( NullPointerException e)
+		{
+			setDefaultSettings();
 		}
 	}
 	
@@ -134,8 +142,26 @@ public class ViewSettings {
 	    }
 
 	}
+	/**
+	 * Get an Integer out of Node text content.
+	 * @param - Node from which we wan to get Integer
+	 * @return - Integer from Node text content.
+	 */
 	private Integer parseInt(Node n)
 	{
 		return Integer.parseInt(( (Element)n).getTextContent() );
+	}
+	
+	/**
+	 * Set default settings, this method can initialize ViewSetting object without external file.
+	 */
+	private void setDefaultSettings()
+	{
+		xWindowPosition_ = 100;
+		yWindowPosition_ = 100;
+		customColumns_ = 15; 
+		customRows_ = 15;
+		customMines_ = 15;
+		lastGivenPlayerName_ = "Damian"; 
 	}
 }

@@ -20,16 +20,22 @@ import Model.Settings.Score;
  *
  */
 public class Model{
-	
+	/**Name of the file in which game options are saved.*/
 	final static String SETTINGS_FILE_NAME = "settings.xml";
-	
-	private Board board_;			// Board on which the game is played.
-	private GameState state_;		// Enum that represents current state of a game.
-	private int time_;				// Counts how many seconds current game lasts.
-	private Timer timer_;			// Increments time_ variable.
-	private Settings settings_;		// Holds setting of game such as difficulty mode, hints permission, high scores etc...
-	private FieldOutlook hint_;		// Holds current hint.
-	private Controller controller_;	// Controller that is manipulating this Model instance.
+	/** Board on which the game is played.*/
+	private Board board_;	
+	/** Enum that represents current state of a game.*/
+	private GameState state_;		
+	/** Counts how many seconds current game lasts.*/
+	private int time_;		
+	/** Increments time_ variable.*/
+	private Timer timer_;	
+	/** Holds setting of game such as difficulty mode, hints permission, high scores etc...*/
+	private Settings settings_;	
+	/** Holds current hint.*/
+	private FieldOutlook hint_;		
+	/** Controller that is manipulating this Model instance.*/
+	private Controller controller_;	
 	
 	/**
 	 * Constructor of Model. It loads Model settings from file, creates game board and sets the
@@ -65,7 +71,7 @@ public class Model{
 	}
 	/**
 	 * This method sets Controller for Model.
-	 * @param c - Controller object.
+	 * @param c Controller object.
 	 */
 	public void  setController(Controller c)
 	{
@@ -86,8 +92,8 @@ public class Model{
 	
 	/**
 	 * Reveal field on the game board, may effect the state of the game, change it to WON or LOST.
-	 * @param x - number of column with the field.
-	 * @param y - number of row with the field.
+	 * @param x number of column with the field.
+	 * @param y number of row with the field.
 	 */
 	public void revealField(int x, int y)
 	{
@@ -114,8 +120,8 @@ public class Model{
 	
 	/**
 	 * This method sets the hint for the player, it receives Outlook of the field from given position.
-	 * @param x - number of column with the field.
-	 * @param y - number of row with the field.
+	 * @param x number of column with the field.
+	 * @param y number of row with the field.
 	 */
 	public void hint(int x, int y)
 	{
@@ -135,10 +141,10 @@ public class Model{
 	}
 	
 	/**
-	 * This method sets or removed the flag on choosen field on game board. If the field is not flagged and is covered it 
+	 * This method sets or removes the flag on choosen field on game board. If the field is not flagged and is covered it 
 	 * sets the flag, if not, it removes the flag from field. It uses method of class Board to perform these actions.
-	 * @param x - column of the field
-	 * @param y - row of the field
+	 * @param x column of the field
+	 * @param y row of the field
 	 */
 	public void switchFlag(int x, int y)
 	{
@@ -160,9 +166,9 @@ public class Model{
 	/**
 	 * Set mode/difficulty of the board. This method only changes settings, not the board. 
 	 * Thus, method newGame() has to be called to create new board with new properties.
-	 * @param columns - new number of columns.
-	 * @param rows - new number of rows.
-	 * @param mines - new number of mines.
+	 * @param columns new number of columns.
+	 * @param rows new number of rows.
+	 * @param mines new number of mines.
 	 */
 	public void setMode(int columns, int rows, int mines) 
 	{
@@ -188,9 +194,7 @@ public class Model{
 								); 
 	}
 	
-	/** 
-	 * Start a new game with settings specified in settings_ field.
-	 */
+	/**  Start a new game with settings specified in settings_ field.*/
 	public void newGame()
 	{
 		board_ = new Board(settings_.columns_,settings_.rows_,settings_.mines_);
@@ -201,10 +205,7 @@ public class Model{
 		timer_.stop();
 	}
 	
-	/**
-	 * Information about the game state.
-	 * @return true if current game is won, false otherwise.
-	 */
+	/** @return true if current game is won, false otherwise.*/
 	private boolean gameWon()
 	{
 		if(board_.getRevealedMines_() == 0 &&
@@ -215,45 +216,46 @@ public class Model{
 		return false;
 	}
 	
-	/**
-	 * Information about the game state.
-	 * @return true if current game is lost, false otherwise.
-	 */
+	/** @return true if current game is lost, false otherwise.*/
 	private boolean gameLost()
 	{
 		return board_.getRevealedMines_() != 0;
 	}
 	
-	/**
-	 * Get table with the HighScores.
-	 * @return Score[] table with the HighScores.
-	 */
+	/** @return Score[] table with the HighScores. */
 	public Score[] getHighScores()
 	{
 		return settings_.getHighScores();
 	}
 	
-	/**
-	 * @return Number of columns in the settings.
-	 */
-	public int getColumns() {return settings_.columns_;}
-	/**
-	 * @return Number of rows in the settings.
-	 */
-	public int getRows() {return settings_.rows_;}
-	/**
-	 * @return Number of mines in the settings.
-	 */
-	public int getMines() {return settings_.mines_;}
-	/**
-	 * @return true if hints are enabled, false otherwise.
-	 */
-	public boolean hintsEnabled() {return settings_.hints_;}
+	/** @return Number of columns in the settings.*/
+	public int getColumns() 
+	{
+		return settings_.columns_;
+	}
+	
+	/** @return Number of rows in the settings.*/
+	public int getRows() 
+	{
+		return settings_.rows_;
+	}
+	
+	/** @return Number of mines in the settings.*/
+	public int getMines()
+	{
+		return settings_.mines_;
+	}
+	
+	/** @return true if hints are enabled, false otherwise.*/
+	public boolean hintsEnabled() 
+	{
+		return settings_.hints_;
+	}
 
 	/**
 	 * Can the results of the game good enough to be in HighScores?
-	 * @param time - low long it took for the player to solve game.
-	 * @param mode - on which settings did player play.
+	 * @param time low long it took for the player to solve game.
+	 * @param mode on which settings did player play.
 	 * @return true if given Score is good enough to be in HighScores, 
 	 * 		  false otherwise.
 	 */
@@ -273,24 +275,20 @@ public class Model{
 	
 	/**
 	 * @return Mode Enum corresponding to current game settings. 
-	 * 		   EXPERT,ADVANCED,BEGINNER,CUSTOM.
+	 * 		   EXPERT,ADVANCED,BEGINNER or CUSTOM.
 	 */
 	public Settings.Mode getMode()
 	{
 		return Settings.Mode.getMode(settings_.columns_, settings_.rows_, settings_.mines_);
 	}
 	
-	/**
-	 * Blocks the game.
-	 */
+	/** Block the game.*/
 	public void block()
 	{
 		state_ = GameState.BLOCKED;
 	}
 	
-	/**
-	 * Save current game settings to file.
-	 */
+	/**Save current game settings to file.*/
 	public void saveSettings()
 	{
 		settings_.saveSettings(SETTINGS_FILE_NAME);

@@ -65,7 +65,9 @@ public class Controller {
 			
 			}
 	}
-	
+	/**
+	 * Set reactions for different events putted in the event queue.
+	 */
 	private void setStrategies()
 	{
 		strategyMap_.put(BoardEvent.class, new ControllerStrategy(){//nowa gra
@@ -86,7 +88,7 @@ public class Controller {
 				
 				updateView();	
 				ModelDataPack pack = model_.getDataPack();
-				if(pack.gameState_ == GameState.WON)
+				if(pack.gameState_ == GameState.WON && !model_.hintsEnabled())
 				{
 					
 					if(model_.canBeInHighScores(pack.time_, model_.getMode()))
