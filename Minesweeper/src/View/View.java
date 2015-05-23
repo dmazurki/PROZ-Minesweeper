@@ -6,7 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.security.InvalidParameterException;
 
 import javax.swing.JButton;
@@ -22,6 +21,7 @@ import Controller.Controller;
 import Model.ModelDataPack;
 import Model.Settings;
 import Model.Settings.Score;
+import Event.CustomOptionsChosenEvent;
 import Event.MenuEvent;
 import Event.NewHighScoreEvent;
 
@@ -166,9 +166,8 @@ public class View {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
 					
-				controller_.blockingQueue_.put(new MenuEvent(
-						MenuEvent.Action.CUSTOM_OPTIONS_CHOSEN
-						,Integer.parseInt(columnsF.getText())
+				controller_.blockingQueue_.put(new CustomOptionsChosenEvent(
+						Integer.parseInt(columnsF.getText())
 						,Integer.parseInt(rowsF.getText())
 						,Integer.parseInt(minesF.getText())));
 				settings_.customColumns_ = Integer.parseInt(columnsF.getText());
