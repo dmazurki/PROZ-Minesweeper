@@ -155,7 +155,7 @@ public class Settings {
 		{
 			Element place = doc.createElement("place");
 			place.setAttribute("playerName", highScores_[i].playerName_);
-			place.setAttribute("time", highScores_[i].mode_.toString());
+			place.setAttribute("mode", highScores_[i].mode_.toString());
 			place.setAttribute("time", new Integer(highScores_[i].time_).toString());
 			highSores.appendChild(place);
 		}
@@ -312,11 +312,11 @@ public class Settings {
 		 */
 		public static Mode parseMode(String s)
 		{
-			if(s=="BEGINNER")
+			if(s.equals("BEGINNER"))
 				return Mode.BEGINNER;
-			if(s=="ADVANCED")
+			if(s.equals("ADVANCED"))
 				return Mode.ADVANCED;
-			if(s=="EXPERT")
+			if(s.equals("EXPERT"))
 				return Mode.EXPERT;
 			return Mode.CUSTOM;
 		}

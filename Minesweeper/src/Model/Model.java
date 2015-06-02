@@ -137,7 +137,15 @@ public class Model{
 	 */
 	public void cancelHint()
 	{
-		hint_ = FieldOutlook.FLAGGED;
+		if(settings_.hints_ == true)
+		{
+			hint_ = FieldOutlook.FLAGGED;
+		}
+		else
+		{
+			hint_ = FieldOutlook.COVERED;
+		}
+		
 	}
 	
 	/**

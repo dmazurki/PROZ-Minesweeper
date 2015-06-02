@@ -8,19 +8,19 @@ import javax.swing.ImageIcon;
 import Model.FieldOutlook;
 /**
  * Class that holds all graphics for the game.
- * @author Damian
+ * @author Damian Mazurkiewicz
  */
 public class Assets {
+	/**Table of images representing fields on the game board. */
 	private static Image[] images_;
+	/** Table of icons for emoticon. */
 	private static Icon[] icons_;
 	
 	
-	/**
-	 * Load images from disc.
-	 */
+	/** Load images from disc.*/
 	public static void load()
 	{
-		//Fields on the board.
+		/**Fields on the board.*/
 		images_ = new Image[16];
 		images_[0] = new ImageIcon("Assets/covered.png").getImage();
 		images_[1] = new ImageIcon("Assets/mine.png").getImage();
@@ -35,7 +35,7 @@ public class Assets {
 		images_[10] = new ImageIcon("Assets/sevenAdjacent.png").getImage();
 		images_[11] = new ImageIcon("Assets/eightAdjacent.png").getImage();
 		
-		//Emoticons.
+		/**Emoticons.*/
 		icons_ = new Icon[4];
 		icons_[0] = new ImageIcon("Assets/faceSmiling.png");
 		icons_[1] = new ImageIcon("Assets/faceSad.png");
@@ -45,8 +45,8 @@ public class Assets {
 	
 	/**
 	 * Get image of given number.
-	 * @param number
-	 * @return Image
+	 * @param nr Number index of the image in image table.
+	 * @return Image Image corresponding to given number.
 	 */
 	public static Image getImage(int nr)
 	{
@@ -55,8 +55,8 @@ public class Assets {
 	
 	/**
 	 * Get icon of given number.
-	 * @param number
-	 * @return Icon
+	 * @param nr Number index of the icon in icon table.
+	 * @return Icon Icon corresponding to given number.
 	 */
 	public static Icon getIcon(int nr)
 	{
@@ -65,8 +65,8 @@ public class Assets {
 	
 	/**
      * Get image corresponding to given FieldOutlook.
-	 * @param field
-	 * @return Image.
+	 * @param field FieldOutlook.
+	 * @return Image Image connected with given FieldOutlook.
 	 */
 	public static Image getImage(FieldOutlook field)
 	{
@@ -86,7 +86,4 @@ public class Assets {
 			default	:	return images_[0]; 
 		}
 	}
-	
-
-
 }

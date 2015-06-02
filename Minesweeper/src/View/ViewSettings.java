@@ -1,19 +1,7 @@
 package View;
 
 import java.io.File;
-
-
-
 import java.io.IOException;
-
-
-
-
-
-
-
-
-import java.util.LinkedList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,16 +22,22 @@ import org.xml.sax.SAXException;
  * @author Damian Mazurkiewicz
  */
 public class ViewSettings {
-	
+	/**X position of the game window on desktop.*/
 	public int xWindowPosition_;
+	/**X position of the game window on desktop.*/
 	public int yWindowPosition_;
+	/**Custom columns showed as default in custom settings dialog.*/
 	public int customColumns_; 
+	/**Custom rows showed as default in custom settings dialog.*/
 	public int customRows_;
+	/**Custom mines showed as default in custom settings dialog.*/
 	public int customMines_;
+	/**Last typed player name when new HighScore was added.*/
 	public String lastGivenPlayerName_; 
+	
 	/**
 	 * Constructor that loads game settings from XML file.  
-	 * @param filePath - path of the XML file with saved settings.
+	 * @param filePath  path of the XML file with saved settings.
 	 */
 	public  ViewSettings(String filePath) 
 	{
@@ -58,7 +52,6 @@ public class ViewSettings {
 			xWindowPosition_ = parseInt( rootElement.getElementsByTagName("xWindowPosition").item(0));
 			yWindowPosition_ = parseInt( rootElement.getElementsByTagName("yWindowPosition").item(0));
 			
-			/*Reading the amount of rows in game board.*/
 			customRows_ = parseInt( rootElement.getElementsByTagName("customRows").item(0));
 			customColumns_ = parseInt( rootElement.getElementsByTagName("customColumns").item(0));
 			customMines_ = parseInt( rootElement.getElementsByTagName("customMines").item(0));
@@ -90,7 +83,7 @@ public class ViewSettings {
 	
 	/**
 	 * Method that saves settings in this object to specified XML file.
-	 * @param filePath - path of the XML file.
+	 * @param filePath  path of the XML file.
 	 */
 	public void saveSettings(String filePath)
 	{
@@ -144,17 +137,15 @@ public class ViewSettings {
 	}
 	/**
 	 * Get an Integer out of Node text content.
-	 * @param - Node from which we wan to get Integer
-	 * @return - Integer from Node text content.
+	 * @param  n from which we wan to get Integer
+	 * @return  Integer from Node text content.
 	 */
 	private Integer parseInt(Node n)
 	{
 		return Integer.parseInt(( (Element)n).getTextContent() );
 	}
 	
-	/**
-	 * Set default settings, this method can initialize ViewSetting object without external file.
-	 */
+	/**Set default settings, this method can initialize ViewSetting object without external file.*/
 	private void setDefaultSettings()
 	{
 		xWindowPosition_ = 100;

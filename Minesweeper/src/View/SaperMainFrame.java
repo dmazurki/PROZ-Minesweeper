@@ -28,22 +28,28 @@ import Event.MenuEvent.Action;
 
 /**
  * Main frame of the game.
- * @author Damian
+ * @author Damian Mazurkiewicz
  */
 public class SaperMainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	
+	/**Game board.*/
 	private SaperBoardPanel saperBoard_;
+	/**Controller needed to initialize Frame, and then to put events in its BlockingQueue. */
 	private Controller controller_;
+	/**Reference of object to itself, needed to show dialog windows.*/
 	private SaperMainFrame thisFrame_;
+	/**Menu item used to dectde whether player wants to use hints or not. 
+	 *state of this mutton must be set from outside thus this reference must be held here.*/
 	private JRadioButtonMenuItem enableHintsMenuItem_; 
 	
 	
 	/**
-	 * 
-	 * @param controller - object that controls View.
-	 * @param xPosition  - xPosition of window.
-	 * @param yPosition  - yPosition of window.
+	 * Create Frame, menu mar, add eventlisteners to all components.
+	 * @param controller  object that controls View.
+	 * @param xPosition   xPosition of window.
+	 * @param yPosition   yPosition of window.
 	 */
 	public SaperMainFrame(Controller controller, int xPosition, int yPosition)
 	{
@@ -70,6 +76,7 @@ public class SaperMainFrame extends JFrame {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
+				/**Player presses H to see hint.*/
 				if(e.getKeyCode() == KeyEvent.VK_H)
 				{
 					Point p = new Point(MouseInfo.getPointerInfo().getLocation().x,MouseInfo.getPointerInfo().getLocation().y);
@@ -81,7 +88,6 @@ public class SaperMainFrame extends JFrame {
 								( p.y-saperBoard_.getBoardY())/View.BLOCK_SIZE,
 								BoardEvent.Action.H_KEY_PRESSED));
 					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -90,12 +96,12 @@ public class SaperMainFrame extends JFrame {
 
 			@Override
 			public void keyReleased(KeyEvent e) {
+				/**Player releases H. Time to hide the hint.*/
 				if(e.getKeyCode() == KeyEvent.VK_H)
 				{
 					try {
 						controller_.blockingQueue_.put(new BoardEvent(0,0,BoardEvent.Action.H_KEY_RELASED));
 					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -110,13 +116,19 @@ public class SaperMainFrame extends JFrame {
 		setResizable(false);
 		
 	}
+	
+	/**
+	 * Update frame.
+	 * @param dataPack Frame is updated based on ModelDataPack.
+	 */
 	void update(ModelDataPack dataPack)
 	{
 		saperBoard_.update(dataPack);
 		setSize(View.BLOCK_SIZE*(dataPack.fields_[0].length+1), View.BLOCK_SIZE*(dataPack.fields_.length+4));
 	}
-	/**
-	 * Method that is responsible for building a menu bar and configuring it.
+	
+	/**Build a menu bar and configure it. 
+	 * @param controller Menu items will put their events in Controller BlockingQueue.
 	 */
 	private void createMenuBar(Controller controller)
 	{
@@ -125,6 +137,8 @@ public class SaperMainFrame extends JFrame {
 		JMenu gameMenu = new JMenu("Game");
 		
 		JMenuItem pauseMenuItem = new JMenuItem("Pause");
+		
+		/**Pause game if player clicked "pause" menu item.*/
 		pauseMenuItem.addActionListener(new ActionListener(){
 
 			@Override
@@ -140,6 +154,8 @@ public class SaperMainFrame extends JFrame {
 			});
 		
 		JMenuItem newGameMenuItem = new JMenuItem("New game");
+		
+		/**Set new game if player clicked "new game" menu item.*/
 		newGameMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
@@ -153,6 +169,8 @@ public class SaperMainFrame extends JFrame {
 			}
 		});
 		JMenuItem highScoresMenuItem = new JMenuItem("Highscores");
+		
+		/**Show highScores if player clicked "HighScores" menu item.*/
 		highScoresMenuItem.addActionListener(new ActionListener(){
 
 			@Override
@@ -169,6 +187,7 @@ public class SaperMainFrame extends JFrame {
 			
 		});
 		
+		/**Exit the game if player clicked "exit" menu item.*/
 		JMenuItem exitMenuItem = new JMenuItem("Exit");
 		exitMenuItem.addActionListener(new ActionListener() {
 			@Override
@@ -192,6 +211,8 @@ public class SaperMainFrame extends JFrame {
 		
 		JMenu optionsMenu = new JMenu("Options");
 	    JMenuItem beginnerOptionMenuItem = new JMenuItem("Beginner");
+	    
+	    /**Set game mode to BEGINNER.*/
 	    beginnerOptionMenuItem.addActionListener(new ActionListener()
 	    {
 
@@ -208,6 +229,7 @@ public class SaperMainFrame extends JFrame {
 	    }
 	    );
 		JMenuItem advancedOptionMenuItem = new JMenuItem("Advanced");
+		/**Set game mode to ADVANCED.*/
 		advancedOptionMenuItem.addActionListener(new ActionListener()
 		    {
 
@@ -225,6 +247,7 @@ public class SaperMainFrame extends JFrame {
 		    }
 		 );
 	    JMenuItem expertOptionMenuItem = new JMenuItem("Expert");
+	    /**Set game mode to EXPERT.*/
 	    expertOptionMenuItem.addActionListener(new ActionListener()
 	    {
 
@@ -241,6 +264,7 @@ public class SaperMainFrame extends JFrame {
 	    }
 	    );
 	    JMenuItem customOptionMenuItem = new JMenuItem("Custom");
+	    /**Set game mode to CUSTOM.*/
 	    customOptionMenuItem.addActionListener(new ActionListener()
 	    {
 
@@ -256,11 +280,9 @@ public class SaperMainFrame extends JFrame {
 			}
 	    }
 	    );
-	    
-      
-        
+	   
 	    enableHintsMenuItem_ = new JRadioButtonMenuItem("Enable hints");
-		
+		/**Enable or disable hints.*/
 		enableHintsMenuItem_.addActionListener(new ActionListener(){
 			
 			@Override
@@ -276,7 +298,6 @@ public class SaperMainFrame extends JFrame {
 					e.printStackTrace();
 				}
 				
-					
 			}
 			
 		});
@@ -290,18 +311,23 @@ public class SaperMainFrame extends JFrame {
 		
 		JMenu helpMenu = new JMenu("Help");
 		JMenuItem gameRulesMenuItem = new JMenuItem("Rules");
+		
+		/**If Rules button was clicked, show Dialog window with rules.*/
 		gameRulesMenuItem.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JDialog dialog = new JDialog(thisFrame_,"Game Rules");
-			    dialog.add(new JLabel("<html>RULES:"
+			    dialog.add(new JLabel("<html><b>RULES:</b>"
 			    		+ "<br>The goal of the game is to reveal all the fields that are not mines</br>"
-			    		+ "<br>or flag all thr fields thar are mines. </br>"
-			    		+ "<br>HINTS:</br>"
-			    		+ "<br>You can turn on the hints in the options menuu then if you press H button</br>"
+			    		+ "<br>or flag all thr fields thar are mines. After revealing the field it can </br>" 
+			    		+ "<br>come up as a mine, then you lose, when not, it shows how many adjacent fields </br>"
+			    		+ "<br>are mines. You reveal field with left mouse button, you flag field with</br>"
+			    		+ "<br>right mouse button.</br>"
+			    		+ "<br><strong>HINTS:</strong></br>"
+			    		+ "<br>You can turn on the hints in the options menu then if you press H button</br>"
 			    		+ "<br>you will see what is the field on the position that you are holding our mouse.</br>"
-			    		+ "<br>but when you play the game with hints on, you will not be able to be in highscores.</br></html>"));
+			    		+ "<br>But when you play the game with hints on, you will not be able to be in highscores.</br></html>"));
 			    dialog.setVisible(true);
 			    dialog.pack();
 			    dialog.setLocationRelativeTo(thisFrame_);
@@ -310,6 +336,21 @@ public class SaperMainFrame extends JFrame {
 			
 		});
 		JMenuItem aboutSaperMenuItem = new JMenuItem("About Saper");
+		/**If About button was clicked, show Dialog window with informations about saper.*/
+		aboutSaperMenuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JDialog dialog = new JDialog(thisFrame_,"AboutSaper");
+				dialog.add(new JLabel("<html>Author: Damian Mazurkiewicz"
+									+ "<br>Date: 1.06.2015</br>"
+									+ "<br>For \"Programowanie Zdarzeniowe\"</br></html>"));
+				dialog.setVisible(true);
+				dialog.pack();
+				dialog.setLocationRelativeTo(thisFrame_);
+				
+			}
+		});
 		helpMenu.add(gameRulesMenuItem);
 		helpMenu.add(aboutSaperMenuItem);
 		
@@ -323,7 +364,7 @@ public class SaperMainFrame extends JFrame {
 	}
 	
 	/**
-	 * Mouse listener that handles player moves on game board. Then it sends proper package to controller.
+	 * Mouse listener that handles player moves on game board. Then it puts proper event in the BlockingQueue.
 	 * When left mouse button was pressed, it tries to uncover field pointed  by mouse.
 	 * When right mouse button was pressed, it tries to flag field selected by mouse.
 	 */
@@ -353,19 +394,18 @@ public class SaperMainFrame extends JFrame {
 	}
 	}
 	
-	/**
-	 * This method sets the actual title of the frame depending on the game mode saved in Settings object.
-	 */
+	/**This method sets the title of the frame. 
+	*@param title Title to be set for frame.
+	*/
 	public void setTitle(String title)
 	{
 		super.setTitle(title);
-	
 	}
 	
 	/**
 	 * Method responsible for setting the state of button "enable Hints". If hints are enabled, this menu 
 	 * item should be checked.
-	 * @param state - if true, button is checked.
+	 * @param state  if true, button is checked.
 	 */
 	public void setHintsButtonState(boolean state)
 	{

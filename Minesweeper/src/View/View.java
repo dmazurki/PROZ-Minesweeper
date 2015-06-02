@@ -22,21 +22,31 @@ import Model.ModelDataPack;
 import Model.Settings;
 import Model.Settings.Score;
 import Event.CustomOptionsChosenEvent;
-import Event.MenuEvent;
 import Event.NewHighScoreEvent;
 
+/**
+ * Class responsible for drawing graphical user interface.
+ * @author Damian Mazurkiewicz
+ */
 public class View {
 	
+	/** Size of the Block, in other word Field in pixels.*/
 	final static int BLOCK_SIZE = 24;
+	/** Name of file with view settings. */
 	final static String SETTINGS_FILE_NAME = "guiSettings.xml";  
 	
+	/**
+	 * Controller object that sets and updates this View basing on
+	 * events putted in a BlockingQueue and Model behavior.
+	 */
 	private Controller controller_;
+	
+	/**Frame, it draws window with a game and all components.*/
 	private SaperMainFrame mainFrame_;
+	/**Some initial settings for View object.*/
 	private ViewSettings settings_;
 	
-	/**
-	 * View class construcror, it loads files to Assets class.
-	 */
+	/**View class construcror, it loads graphic to Assets class. It also loads Settings from file*/
 	public View()
 	{
 		Assets.load();
@@ -44,14 +54,19 @@ public class View {
 	}
 	
 	/**
-	 * It takes initial data pack and initializes View, creating first window.
-	 * @param dataPack
+	 * Set Controller for View and create window.
+	 * @param c Controller we want to set for this object.
 	 */
 	public void setController(Controller c)
 	{
 		mainFrame_ = new SaperMainFrame(c,settings_.xWindowPosition_,settings_.yWindowPosition_);
 		controller_ = c;
 	}
+	
+	/**
+	 * Update View using data passed as a parameter.
+	 * @param dataPack Data pack from Model.
+	 */
 	public void update(ModelDataPack dataPack)
 	{
 		SwingUtilities.invokeLater(new Runnable() {		
@@ -63,8 +78,8 @@ public class View {
 	}
 	
 	/**
-	 * Method that shows dialog window, in which player can type his/her name, then it calls the controller
-	 * method, that tries to add new higscore to HighScores table.
+	 * Method that shows dialog window, in which player can type his/her name, then puts event in
+	 * the BlockingQueue that makes Controller try to add new score to the HighScores table.
 	 */
 	public void addHighScore()
 	{
@@ -109,6 +124,11 @@ public class View {
 		dialog.pack();
 		dialog.setLocationRelativeTo(mainFrame_);
 	}
+	
+	/**
+	 * Show the dialog window.
+	 * @param message Message that will be displayed in the dialog.
+	 */
 	public void showDialog(String message)
 	{
 		JDialog dialog = new JDialog(mainFrame_,"Message");
@@ -136,10 +156,10 @@ public class View {
 	
 
 	
-	
+	/**Show dialog window that enables player to chose custom parameters of Sapper Board. */
 	public void showCustomOptionsDialog()
 	{
-		/* Creating dialog window for choosing custom board settings. */ 
+		/** Creating dialog window for choosing custom board settings. */ 
 		JDialog options = new JDialog(mainFrame_,"Custom");
 		options.setLayout(new BorderLayout());
 		
@@ -210,7 +230,10 @@ public class View {
 	}
 	
 
-	
+	/**
+	 * Show window containing current table of HighScores.
+	 * @param highScores Table of HighScores.
+	 */
 	public void showHighScoresTable(Score[] highScores)
 	{
 
@@ -238,6 +261,9 @@ public class View {
 		
 		JTable scoreTable = new JTable(scoresMatrix,columns);
 		scoreTable.setEnabled(false);
+		scoreTable.getColumn("Player").setPreferredWidth(120);
+		scoreTable.getColumn("Mode").setPreferredWidth(80);
+		scoreTable.getColumn("Time").setPreferredWidth(50);
 		scoreTable.setBackground(Color.WHITE);
 		
 		tablePanel.add(scoreTable.getTableHeader(),BorderLayout.NORTH);
@@ -266,16 +292,26 @@ public class View {
 		
 	}
 	
+	/**
+	 * Set title of the window.
+	 * @param title Title to set.
+	 */
 	public void setTitle(String title)
 	{
 		mainFrame_.setTitle(title);
 	}
 		
+	/**
+	 * Method responsible for setting the state of button "enable Hints". If hints are enabled, this menu 
+	 * item should be checked.
+	 * @param state if true, button is checked.
+	 */
 	public void setHintsButtonState(boolean state)
 	{
 		mainFrame_.setHintsButtonState(state);
 	}
 	
+	/**Save settings of the GUI to XML file.*/
 	public void saveSettings()
 	{
 		settings_.xWindowPosition_ = mainFrame_.getX();
